@@ -1,0 +1,4 @@
+rootProject.name = 'swagplash-project'
+include 'swagplash'
+include 'swagplash-sample'
+
