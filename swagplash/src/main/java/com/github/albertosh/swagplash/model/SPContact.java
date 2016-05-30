@@ -25,4 +25,23 @@ public class SPContact {
     public String getEmail() {
         return email;
     }
+
+
+    public SPContact() {
+    }
+
+    public SPContact setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public SPContact setUrl(String url) {
+        this.url = url;
+        return this;
+    }
+
+    public SPContact setEmail(String email) {
+        this.email = email;
+        return this;
+    }
 }

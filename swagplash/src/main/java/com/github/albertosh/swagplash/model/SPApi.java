@@ -33,6 +33,24 @@ public class SPApi {
         }
     }
 
+    public SPApi() {
+    }
+
+    public SPApi setTags(List<String> tags) {
+        this.tags = tags;
+        return this;
+    }
+
+    public SPApi setProduces(List<String> produces) {
+        this.produces = produces;
+        return this;
+    }
+
+    public SPApi setConsumes(List<String> consumes) {
+        this.consumes = consumes;
+        return this;
+    }
+
     public List<String> getTags() {
         return tags;
     }

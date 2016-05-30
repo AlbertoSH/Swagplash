@@ -93,4 +93,52 @@ public class SPApiParameter {
     public SPItems getItems() {
         return items;
     }
+
+    public SPApiParameter() {
+    }
+
+    public SPApiParameter setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public SPApiParameter setIn(String in) {
+        this.in = in;
+        return this;
+    }
+
+    public SPApiParameter setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public SPApiParameter setRequired(boolean required) {
+        this.required = required;
+        return this;
+    }
+
+    public SPApiParameter setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+        return this;
+    }
+
+    public SPApiParameter setSchema(SPSchema schema) {
+        this.schema = schema;
+        return this;
+    }
+
+    public SPApiParameter setType(String type) {
+        this.type = type;
+        return this;
+    }
+
+    public SPApiParameter setFormat(String format) {
+        this.format = format;
+        return this;
+    }
+
+    public SPApiParameter setItems(SPItems items) {
+        this.items = items;
+        return this;
+    }
 }

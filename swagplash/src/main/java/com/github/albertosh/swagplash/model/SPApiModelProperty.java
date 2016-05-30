@@ -59,4 +59,38 @@ public class SPApiModelProperty {
     public String getFormat() {
         return format;
     }
+
+
+    public SPApiModelProperty() {
+    }
+
+    public SPApiModelProperty setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public SPApiModelProperty setRequired(boolean required) {
+        this.required = required;
+        return this;
+    }
+
+    public SPApiModelProperty setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public SPApiModelProperty setType(String type) {
+        this.type = type;
+        return this;
+    }
+
+    public SPApiModelProperty setFormat(String format) {
+        this.format = format;
+        return this;
+    }
+
+    public SPApiModelProperty set$ref(String $ref) {
+        this.$ref = $ref;
+        return this;
+    }
 }

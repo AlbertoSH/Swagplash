@@ -119,4 +119,45 @@ public class SPItems {
     public Boolean isExclusiveMinimum() {
         return exclusiveMinimum;
     }
+
+
+    public SPItems set$ref(String $ref) {
+        this.$ref = $ref;
+        return this;
+    }
+
+    public SPItems setType(String type) {
+        this.type = type;
+        return this;
+    }
+
+    public SPItems setFormat(String format) {
+        this.format = format;
+        return this;
+    }
+
+    public SPItems setItems(SPItems items) {
+        this.items = items;
+        return this;
+    }
+
+    public SPItems setMaximum(Number maximum) {
+        this.maximum = maximum;
+        return this;
+    }
+
+    public SPItems setExclusiveMaximum(Boolean exclusiveMaximum) {
+        this.exclusiveMaximum = exclusiveMaximum;
+        return this;
+    }
+
+    public SPItems setMinimum(Number minimum) {
+        this.minimum = minimum;
+        return this;
+    }
+
+    public SPItems setExclusiveMinimum(Boolean exclusiveMinimum) {
+        this.exclusiveMinimum = exclusiveMinimum;
+        return this;
+    }
 }

@@ -108,4 +108,14 @@ public class SPSchema {
             required.add(property.getName());
         return this;
     }
+
+    public SPSchema setRequired(List<String> required) {
+        this.required = required;
+        return this;
+    }
+
+    public SPSchema setProperties(Map<String, SPApiModelProperty> properties) {
+        this.properties = properties;
+        return this;
+    }
 }

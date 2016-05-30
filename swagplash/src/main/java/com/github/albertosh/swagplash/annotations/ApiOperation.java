@@ -1,14 +1,16 @@
 package com.github.albertosh.swagplash.annotations;
 
-import play.mvc.Http;
+import com.github.albertosh.swagplash.actions.ApiOperationAction;
+import play.mvc.With;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@With(ApiOperationAction.class)
 @Target(ElementType.METHOD)
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface ApiOperation {
     /**
      * Corresponds to the `summary` field of the operation.

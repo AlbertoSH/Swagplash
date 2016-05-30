@@ -13,14 +13,13 @@ public class SPApiModel {
 
     private String name;
     private String description;
-    private String type;
+    private String type = "object";
     private List<String> required;
     private Map<String, SPApiModelProperty> properties;
 
     public SPApiModel(ApiModel apiModel, TypeElement classElement) {
         name = apiModel.value().isEmpty() ? classElement.getSimpleName().toString() : apiModel.value();
         description = apiModel.description();
-        type = "object";
         required = new ArrayList<>();
         properties = new LinkedHashMap<>();
     }
@@ -50,5 +49,33 @@ public class SPApiModel {
         properties.put(property.getName(), property);
         if (property.isRequired())
             required.add(property.getName());
+    }
+
+    public SPApiModel() {
+    }
+
+    public SPApiModel setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public SPApiModel setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public SPApiModel setType(String type) {
+        this.type = type;
+        return this;
+    }
+
+    public SPApiModel setRequired(List<String> required) {
+        this.required = required;
+        return this;
+    }
+
+    public SPApiModel setProperties(Map<String, SPApiModelProperty> properties) {
+        this.properties = properties;
+        return this;
     }
 }

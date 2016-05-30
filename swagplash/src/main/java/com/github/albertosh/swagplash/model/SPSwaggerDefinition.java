@@ -27,6 +27,49 @@ public class SPSwaggerDefinition {
         Collections.addAll(produces, def.consumes());
     }
 
+    public SPSwaggerDefinition() {
+    }
+
+    public SPSwaggerDefinition setInfo(SPInfo info) {
+        this.info = info;
+        return this;
+    }
+
+    public SPSwaggerDefinition setHost(String host) {
+        this.host = host;
+        return this;
+    }
+
+    public SPSwaggerDefinition setBasePath(String basePath) {
+        this.basePath = basePath;
+        return this;
+    }
+
+    public SPSwaggerDefinition setSchemes(List<String> schemes) {
+        this.schemes = schemes;
+        return this;
+    }
+
+    public SPSwaggerDefinition setConsumes(List<String> consumes) {
+        this.consumes = consumes;
+        return this;
+    }
+
+    public SPSwaggerDefinition setProduces(List<String> produces) {
+        this.produces = produces;
+        return this;
+    }
+
+    public SPSwaggerDefinition setPaths(Map<String, Map<String, SPApiOperation>> paths) {
+        this.paths = paths;
+        return this;
+    }
+
+    public SPSwaggerDefinition setDefinitions(Map<String, SPApiModel> definitions) {
+        this.definitions = definitions;
+        return this;
+    }
+
     public String getSwagger() {
         return swagger;
     }

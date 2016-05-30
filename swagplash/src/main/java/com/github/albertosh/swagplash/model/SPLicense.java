@@ -19,4 +19,17 @@ public class SPLicense {
     public String getUrl() {
         return url;
     }
+
+    public SPLicense() {
+    }
+
+    public SPLicense setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public SPLicense setUrl(String url) {
+        this.url = url;
+        return this;
+    }
 }

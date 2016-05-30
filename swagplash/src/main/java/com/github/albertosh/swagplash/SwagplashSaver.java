@@ -15,12 +15,7 @@ public class SwagplashSaver {
     private final ObjectMapper mapper;
 
     public SwagplashSaver() {
-        mapper = new ObjectMapper();
-        configureMapper(mapper);
-    }
-
-    private void configureMapper(ObjectMapper mapper) {
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        mapper = new SwagplashMapper();
     }
 
     public void save(SPSwaggerDefinition swagger, ProcessingEnvironment processingEnv) {

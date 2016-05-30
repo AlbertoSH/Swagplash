@@ -52,4 +52,23 @@ public class SPResponse {
     public SPSchema getSchema() {
         return schema;
     }
+
+
+    public SPResponse() {
+    }
+
+    public SPResponse setCode(int code) {
+        this.code = code;
+        return this;
+    }
+
+    public SPResponse setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public SPResponse setSchema(SPSchema schema) {
+        this.schema = schema;
+        return this;
+    }
 }

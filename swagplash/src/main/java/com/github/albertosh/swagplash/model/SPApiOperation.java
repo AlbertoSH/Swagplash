@@ -132,4 +132,53 @@ public class SPApiOperation {
     public Map<String, SPResponse> getResponses() {
         return responses;
     }
+
+
+    public SPApiOperation() {
+    }
+
+    public SPApiOperation setPath(String path) {
+        this.path = path;
+        return this;
+    }
+
+    public SPApiOperation setMethod(String method) {
+        this.method = method;
+        return this;
+    }
+
+    public SPApiOperation setSummary(String summary) {
+        this.summary = summary;
+        return this;
+    }
+
+    public SPApiOperation setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public SPApiOperation setTags(List<String> tags) {
+        this.tags = tags;
+        return this;
+    }
+
+    public SPApiOperation setProduces(List<String> produces) {
+        this.produces = produces;
+        return this;
+    }
+
+    public SPApiOperation setConsumes(List<String> consumes) {
+        this.consumes = consumes;
+        return this;
+    }
+
+    public SPApiOperation setParameters(List<SPApiParameter> parameters) {
+        this.parameters = parameters;
+        return this;
+    }
+
+    public SPApiOperation setResponses(Map<String, SPResponse> responses) {
+        this.responses = responses;
+        return this;
+    }
 }
