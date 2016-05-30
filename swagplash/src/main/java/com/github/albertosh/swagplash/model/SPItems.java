@@ -1,7 +1,5 @@
 package com.github.albertosh.swagplash.model;
 
-import java.util.LinkedHashMap;
-
 public class SPItems {
 
     private String $ref;

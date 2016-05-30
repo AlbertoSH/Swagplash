@@ -16,7 +16,7 @@ public @interface ApiOperation {
      * Provides a brief description of this operation. Should be 120 characters or less
      * for proper visibility in Swagger-UI.
      */
-    String value();
+    String value() default "";
 
     /**
      * Corresponds to the 'description' field of the operation.
@@ -32,7 +32,7 @@ public @interface ApiOperation {
      * A non-empty value will override the value received from {@link Api#value()} or {@link Api#tags()}
      * for this operation.
      */
-    String[] tags() default "";
+    String[] tags() default {};
 
     /**
      * Corresponds to the `method` field as the HTTP method used.

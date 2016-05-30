@@ -13,3 +13,19 @@ dependencies {
     compile 'com.typesafe.play:play_2.11:2.5.3'
     compile "com.google.code.findbugs:findbugs:3.0.1"
 }
+
+apply plugin: 'maven'
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "http://localhost:8081/nexus/repository/hightrack") {
+                authentication(userName: "admin", password: "admin123")
+            }
+            pom.version = "1.0.0-SNAPSHOT"
+            pom.artifactId = "swagplash"
+            pom.groupId = "com.github.albertosh"
+        }
+    }
+}

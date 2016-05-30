@@ -13,4 +13,16 @@ public class SPContact {
         url = contact.url();
         email = contact.email();
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 }

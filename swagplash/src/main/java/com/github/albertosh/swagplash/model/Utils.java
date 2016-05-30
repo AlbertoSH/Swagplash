@@ -1,6 +1,7 @@
 package com.github.albertosh.swagplash.model;
 
 import com.github.albertosh.swagplash.annotations.ApiModel;
+import scala.annotation.meta.field;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -33,36 +34,29 @@ public class Utils {
 
     public static String getType(VariableElement field) {
         String declaredType = field.asType().toString();
-        try {
-            processingEnv.getTypeUtils().boxedClass((PrimitiveType) field.asType());
-            return getType(declaredType);
-        } catch (Exception e) {
-        }
+        if (declaredType.endsWith("[]"))
+            return "array";
 
-        try {
-            processingEnv.getTypeUtils().unboxedType(field.asType());
-            return getType(declaredType.toLowerCase());
-        } catch (Exception e) {
-        }
-
-
-        TypeMirror elem = processingEnv.getElementUtils().getTypeElement(declaredType).asType();
-        TypeMirror typeOfString = processingEnv.getElementUtils().getTypeElement(String.class.getName()).asType();
-
-        // Concrete cases
-        if (elem.equals(typeOfString))
-            return "string";
-
-        warning("Unsupported type", field);
-        return null;
+        return getType(declaredType, field);
     }
 
-    public static String getType(String type) {
-        switch (type) {
+    public static String getTypeOfArrayItems(VariableElement element) {
+        String declaredType = element.asType().toString().replaceAll("\\[\\]","");
+        return getType(declaredType, element);
+    }
+
+    public static String getType(String type, Element field) {
+        String transformed = type.replaceAll(".+\\.", "").toLowerCase();
+        System.out.println("getType: " + type);
+        System.out.println("transformed: " + transformed);
+        switch (transformed) {
             case "int":
             case "long":
                 return "integer";
+            case "string":
+                return "string";
             default:
+                warning("Unsupported type", field);
                 return null;
         }
     }

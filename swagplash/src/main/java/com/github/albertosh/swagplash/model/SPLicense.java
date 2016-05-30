@@ -11,4 +11,12 @@ public class SPLicense {
         name = license.name();
         url = license.url();
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 }

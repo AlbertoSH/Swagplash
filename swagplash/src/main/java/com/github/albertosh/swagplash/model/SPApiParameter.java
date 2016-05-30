@@ -38,6 +38,8 @@ public class SPApiParameter {
         parameter.description = apiQueryParam.value();
         parameter.required = apiQueryParam.required();
         parameter.type = Utils.getType(paramElement);
+        if ((parameter.type) != null && (parameter.type.equals("array")))
+            parameter.items = SPItems.newBuilder().withType(Utils.getTypeOfArrayItems(paramElement)).build();
         parameter.defaultValue = apiQueryParam.defaultValue();
         parameter.format = Utils.getFormat(paramElement);
         return parameter;
@@ -70,7 +72,7 @@ public class SPApiParameter {
 
     @JsonProperty("default")
     public Object getDefaultValue() {
-        if (defaultValue != null)
+        if ((defaultValue != null) && (!defaultValue.isEmpty()))
             return Utils.defaultValueWithTypeFormat(defaultValue, type, format);
         else
             return null;

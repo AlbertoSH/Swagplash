@@ -28,8 +28,8 @@ public class SwagplashSaver {
             // TODO define this
             FileObject fileObject = processingEnv.getFiler().createResource(
                     StandardLocation.SOURCE_OUTPUT,
-                    "com.github.albertosh.swagplash",
-                    "swagger.json"
+                    "",
+                    "Swagger.json"
             );
 
             OutputStream os = fileObject.openOutputStream();
