@@ -92,8 +92,6 @@ public class ApiOperationAction extends Action<ApiOperation> {
         if ((clientAccept == null) || clientAccept.length == 0) {
             return Optional.empty();
         } else {
-
-
             List<String> produces = new ArrayList<String>();
             Collections.addAll(produces, configuration.produces());
             if (produces.isEmpty()) {

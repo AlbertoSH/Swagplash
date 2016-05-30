@@ -37,7 +37,11 @@ public class SPInfo {
     }
 
     public SPLicense getLicense() {
-        return license;
+        return license == null
+                ? null
+                : license.getName() != null
+                ? license
+                : null;
     }
 
     public String getVersion() {

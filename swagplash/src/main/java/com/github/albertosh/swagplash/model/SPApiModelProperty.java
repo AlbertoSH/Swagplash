@@ -5,6 +5,7 @@ import com.github.albertosh.swagplash.annotations.ApiBodyParam;
 import com.github.albertosh.swagplash.annotations.ApiModelProperty;
 
 import javax.annotation.Nullable;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 public class SPApiModelProperty {
@@ -25,6 +26,20 @@ public class SPApiModelProperty {
     }
 
     public SPApiModelProperty(ApiModelProperty apiModelProperty, VariableElement field) {
+        name = apiModelProperty.name().isEmpty() ? field.getSimpleName().toString() : apiModelProperty.name();
+        description = apiModelProperty.value();
+        type = Utils.getType(field);
+        format = Utils.getFormat(field);
+
+        if (Utils.isPrimitive(field)) {
+            required = true;
+        } else {
+            Nullable nullable = field.getAnnotation(Nullable.class);
+            required = (nullable == null);
+        }
+    }
+
+    public SPApiModelProperty(ApiModelProperty apiModelProperty, ExecutableElement field) {
         name = apiModelProperty.name().isEmpty() ? field.getSimpleName().toString() : apiModelProperty.name();
         description = apiModelProperty.value();
         type = Utils.getType(field);

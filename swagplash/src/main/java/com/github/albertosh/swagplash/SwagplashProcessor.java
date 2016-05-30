@@ -12,7 +12,7 @@ import javax.tools.Diagnostic;
 import java.util.*;
 
 @SupportedAnnotationTypes({
-    "com.github.albertosh.swagplash.annotations.SwaggerDefinition"
+        "com.github.albertosh.swagplash.annotations.SwaggerDefinition"
 })
 public class SwagplashProcessor
         extends AbstractProcessor {
@@ -81,7 +81,19 @@ public class SwagplashProcessor
         for (Element field : apiModelElement.getEnclosedElements()) {
             if (field.getKind().isField()) {
                 addField((VariableElement) field, spApiModel);
+            } else if (field.getKind() == ElementKind.METHOD) {
+                addPropertyMethod((ExecutableElement) field, spApiModel);
             }
+        }
+    }
+
+    private void addPropertyMethod(ExecutableElement field, SPApiModel spApiModel) {
+        ApiModelProperty apiModelProperty = field.getAnnotation(ApiModelProperty.class);
+        if (apiModelProperty != null) {
+            if (apiModelProperty.hidden())
+                return;
+            SPApiModelProperty spApiModelProperty = new SPApiModelProperty(apiModelProperty, field);
+            spApiModel.addProperty(spApiModelProperty);
         }
     }
 

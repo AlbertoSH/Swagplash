@@ -5,6 +5,7 @@ import scala.annotation.meta.field;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.PrimitiveType;
@@ -45,10 +46,16 @@ public class Utils {
         return getType(declaredType, element);
     }
 
+    public static String getType(ExecutableElement method) {
+        String returnType = method.getReturnType().toString();
+        if (returnType.endsWith("[]"))
+            return "array";
+
+        return getType(returnType, method);
+    }
+
     public static String getType(String type, Element field) {
         String transformed = type.replaceAll(".+\\.", "").toLowerCase();
-        System.out.println("getType: " + type);
-        System.out.println("transformed: " + transformed);
         switch (transformed) {
             case "int":
             case "long":
@@ -62,23 +69,25 @@ public class Utils {
     }
 
     public static String getFormat(VariableElement field) {
-        try {
-            processingEnv.getTypeUtils().boxedClass((PrimitiveType) field.asType());
-            return getFormat(field.asType().toString());
-        } catch (Exception e) {
-        }
+        String declaredType = field.asType().toString();
+        if (declaredType.endsWith("[]"))
+            return "array";
 
-        try {
-            processingEnv.getTypeUtils().unboxedType(field.asType());
-            return getFormat(field.asType().toString().toLowerCase());
-        } catch (Exception e) {
-        }
+        return getFormat(declaredType);
+    }
 
-        return null;
+
+    public static String getFormat(ExecutableElement method) {
+        String returnType = method.getReturnType().toString();
+        if (returnType.endsWith("[]"))
+            return "array";
+
+        return getFormat(returnType);
     }
 
     public static String getFormat(String type) {
-        switch (type) {
+        String transformed = type.replaceAll(".+\\.", "").toLowerCase();
+        switch (transformed) {
             case "int":
                 return "int32";
             case "long":
@@ -96,6 +105,10 @@ public class Utils {
             return false;
         }
 
+    }
+
+    public static boolean isPrimitive(ExecutableElement method) {
+        return method.getReturnType().getKind().isPrimitive();
     }
 
     public static boolean typeMirrorIsNotApiModel(TypeMirror tm) {

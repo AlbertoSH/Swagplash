@@ -1,5 +1,6 @@
 package com.github.albertosh.swagplash.actions;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.albertosh.swagplash.annotations.ApiBodyParam;
 import play.Logger;

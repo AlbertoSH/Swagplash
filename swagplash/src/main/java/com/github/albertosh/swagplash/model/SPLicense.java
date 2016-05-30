@@ -13,7 +13,7 @@ public class SPLicense {
     }
 
     public String getName() {
-        return name;
+        return name.isEmpty() ? null : name;
     }
 
     public String getUrl() {
