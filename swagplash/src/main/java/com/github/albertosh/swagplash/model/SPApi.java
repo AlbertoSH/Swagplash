@@ -1,19 +1,19 @@
 package com.github.albertosh.swagplash.model;
 
 import com.github.albertosh.swagplash.annotations.Api;
+import com.github.albertosh.swagplash.annotations.SecureEndPoint;
 
-import javax.lang.model.element.Element;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import javax.lang.model.element.TypeElement;
+import java.util.*;
 
 public class SPApi {
 
     private List<String> tags = new ArrayList<>();
     private List<String> produces = new ArrayList<>();
     private List<String> consumes = new ArrayList<>();
+    private List<SPSecureEndPoint> security = new ArrayList<>();
 
-    public SPApi(Api api, SPSwaggerDefinition swagger) {
+    public SPApi(Api api, SPSwaggerDefinition swagger, TypeElement apiClassElement) {
         if (api.tags().length > 0) {
             Collections.addAll(tags, api.tags());
         } else if (!api.value().isEmpty()) {
@@ -30,6 +30,11 @@ public class SPApi {
             Collections.addAll(consumes, api.produces());
         } else {
             consumes.addAll(swagger.getConsumes());
+        }
+
+        SecureEndPoint[] secureEndPoints = apiClassElement.getAnnotationsByType(SecureEndPoint.class);
+        for (SecureEndPoint secureEndPoint : secureEndPoints) {
+            security.add(new SPSecureEndPoint(secureEndPoint));
         }
     }
 
@@ -61,5 +66,14 @@ public class SPApi {
 
     public List<String> getConsumes() {
         return consumes;
+    }
+
+    public List<SPSecureEndPoint> getSecurity() {
+        return security;
+    }
+
+    public SPApi setSecurity(List<SPSecureEndPoint> security) {
+        this.security = security;
+        return this;
     }
 }

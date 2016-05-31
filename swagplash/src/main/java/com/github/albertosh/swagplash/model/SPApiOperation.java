@@ -19,6 +19,7 @@ public class SPApiOperation {
     private List<String> consumes = new ArrayList<>();
     private List<SPApiParameter> parameters = new ArrayList<>();
     private Map<String, SPResponse> responses = new LinkedHashMap<>();
+    private SPApiOperationSecurity security = new SPApiOperationSecurity();
 
     public SPApiOperation(ApiOperation apiOperation, SPApi api, ExecutableElement method) {
         path = apiOperation.path();
@@ -45,6 +46,11 @@ public class SPApiOperation {
 
         buildParameters(method);
         buildResponses(method);
+        this.security.addAll(api.getSecurity());
+        SecureEndPoint[] secureEndPoints = method.getAnnotationsByType(SecureEndPoint.class);
+        for (SecureEndPoint secureEndPoint : secureEndPoints) {
+            security.add(new SPSecureEndPoint(secureEndPoint));
+        }
     }
 
     private void buildParameters(ExecutableElement method) {
@@ -133,6 +139,14 @@ public class SPApiOperation {
         return responses;
     }
 
+    public SPApiOperationSecurity getSecurity() {
+        return security;
+    }
+
+    public SPApiOperation setSecurity(SPApiOperationSecurity security) {
+        this.security = security;
+        return this;
+    }
 
     public SPApiOperation() {
     }
@@ -181,4 +195,6 @@ public class SPApiOperation {
         this.responses = responses;
         return this;
     }
+
+
 }

@@ -3,6 +3,7 @@ package com.github.albertosh.swagplash.sample.petstore_minimal;
 import com.github.albertosh.swagplash.annotations.Api;
 import com.github.albertosh.swagplash.annotations.ApiOperation;
 import com.github.albertosh.swagplash.annotations.ApiResponse;
+import com.github.albertosh.swagplash.annotations.SecureEndPoint;
 import play.mvc.Result;
 
 @Api
@@ -18,6 +19,7 @@ public class PetController {
             responseContainer = "List",
             response = Pet.class
     )
+    @SecureEndPoint("dumb")
     public Result getPets() {
         return null;
     }

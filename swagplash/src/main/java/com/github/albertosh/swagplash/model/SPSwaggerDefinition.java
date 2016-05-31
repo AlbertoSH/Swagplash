@@ -15,6 +15,7 @@ public class SPSwaggerDefinition {
     private List<String> produces = new ArrayList<>();
     private Map<String, Map<String, SPApiOperation>> paths = new LinkedHashMap<>();
     private Map<String, SPApiModel> definitions = new LinkedHashMap<>();
+    private Map<String, SPSecureDefinition> securityDefinitions = new LinkedHashMap<>();
 
     public SPSwaggerDefinition(SwaggerDefinition def) {
         info = new SPInfo(def.info());
@@ -106,6 +107,10 @@ public class SPSwaggerDefinition {
         return definitions;
     }
 
+    public Map<String, SPSecureDefinition> getSecurityDefinitions() {
+        return securityDefinitions;
+    }
+
     public void addDefinition(SPApiModel spApiModel) {
         definitions.put(spApiModel.getName(), spApiModel);
     }
@@ -122,5 +127,9 @@ public class SPSwaggerDefinition {
                     method);
         }
         path.put(apiOperation.getMethod(), apiOperation);
+    }
+
+    public void addSecureDefinition(SPSecureDefinition secureDefinition) {
+        securityDefinitions.put(secureDefinition.getSecureName(), secureDefinition);
     }
 }

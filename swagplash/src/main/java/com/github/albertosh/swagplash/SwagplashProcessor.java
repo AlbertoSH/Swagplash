@@ -41,6 +41,7 @@ public class SwagplashProcessor
         Utils.init(processingEnv);
         processSwagger(annotations, roundEnv);
         processApiModel(annotations, roundEnv);
+        processSecureDefinitions(annotations, roundEnv);
         processApi(annotations, roundEnv);
 
         if (roundEnv.processingOver()) {
@@ -108,6 +109,20 @@ public class SwagplashProcessor
     }
 
 
+    private void processSecureDefinitions(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        for (Element secureDefinitionElement : roundEnv.getElementsAnnotatedWith(SecureDefinition.class)) {
+            SecureDefinition secureDefinition = secureDefinitionElement.getAnnotation(SecureDefinition.class);
+            addSecureDefinition(secureDefinition, secureDefinitionElement);
+        }
+    }
+
+    private void addSecureDefinition(SecureDefinition secureDefinition, Element secureDefinitionElement) {
+        SPSecureDefinition spSecureDefinition = new SPSecureDefinition(secureDefinition, (TypeElement) secureDefinitionElement);
+        swagger.addSecureDefinition(spSecureDefinition);
+    }
+
+
+
     private void processApi(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         for (Element apiElement : roundEnv.getElementsAnnotatedWith(Api.class)) {
             Api api = apiElement.getAnnotation(Api.class);
@@ -118,7 +133,7 @@ public class SwagplashProcessor
     }
 
     private void addApi(Api api, Element apiElement) {
-        SPApi spApi = new SPApi(api, swagger);
+        SPApi spApi = new SPApi(api, swagger, (TypeElement) apiElement);
         for (Element method : apiElement.getEnclosedElements()) {
             ApiOperation apiOperation = method.getAnnotation(ApiOperation.class);
             if ((apiOperation != null) && (!apiOperation.hidden())) {
