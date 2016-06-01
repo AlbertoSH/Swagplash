@@ -1,0 +1,48 @@
+group 'com.github.albertosh'
+version '1.0.0'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.4'
+    compile 'com.typesafe.play:play_2.11:2.5.3'
+    compile "com.google.code.findbugs:findbugs:3.0.1"
+}
+
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
+    }
+}
+apply plugin: 'com.jfrog.bintray'
+
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+    configurations = ['archives']
+    pkg {
+        repo = 'maven'
+        name = 'com.github.albertosh.swagplash'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/AlbertoSH/Swagplash.git'
+        issueTrackerUrl = 'https://github.com/AlbertoSH/Swagplash/issues'
+        labels = ['PlayFramework', 'Swagger']
+        publicDownloadNumbers = true
+        githubRepo = 'AlbertoSH/Swagplash'
+        githubReleaseNotesFile = 'README.md'
+        version {
+            name = '1.0.0'
+            desc = 'Swagplash 1.0.0'
+            vcsTag = '1.0.0'
+        }
+    }
+}

@@ -1,0 +1,6 @@
+rootProject.name = 'swagplash-project'
+include 'swagplash'
+include 'swagplash-sample'
+include 'swagplash-sample-petstore-minimal'
+include 'swagplash-sample-petstore-simple'
+
