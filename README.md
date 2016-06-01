@@ -1,8 +1,10 @@
 # Swagplash
 
+Play Framework utilities and Swagger documentation generator at compile time
+
 ## Overview
 
-Generating documentation for our API is a tedious task. Lots of things to write and mantain up-to-date to out code changes. Wouldn't it be nice to let it generate by itself and evolve with our code?
+Generating documentation for our API is a tedious task. Lots of things to write and maintain up-to-date to out code changes. Wouldn't it be nice to let it generate by itself and evolve with our code?
 
 **Swagplash** provides an easy way of generating [Swagger](http://swagger.io/) documentation in addition to some utils to [Play Framework](https://www.playframework.com/) 
 
@@ -12,11 +14,12 @@ Generating documentation for our API is a tedious task. Lots of things to write 
 
 * Generate Swagger specification for your API at compile time
 * Verbose code
-* Body parameters check (**not implemented yet but scheduled in the roadmap**)
+* Body parameters check
+* Security check
 
 --- 
 
-## Usage
+## How to start
 
 Swagplash is based in static code analysis with annotation support. It can make "some magic" but it's not a wizard. You'll have to let it know some data:
 
@@ -26,35 +29,31 @@ Swagplash is based in static code analysis with annotation support. It can make 
 
 ```
 libraryDependencies += "com.github.albertosh" % "swagplash" % "1.0.0"
-``
+```
 
 * **Specify basic info**: Create a class and annotate it with `@SwaggerDefinition`. In this annotation you can specify the basic info of your API. You don't even hava to use it at runtime or even have a public constructor. All Swagplash needs is the info in the annotation:
 
-``` java
+```java
 @SwaggerDefinition(
-        info = @Info(
-                title = "Swagger Petstore",
-                description = "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification",
-                version = "1.0.0",
-                termsOfService = "http://swagger.io/terms/",
-                contact = @Contact(
-                        name = "Swagger API Team"
-                ),
-                license = @License(
-                        name = "MIT"
-                )
+    info = @Info(
+        title = "Swagger Petstore",
+        description = "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification",
+        version = "1.0.0",
+         termsOfService = "http://swagger.io/terms/",
+        contact = @Contact(name = "Swagger API Team"),
+        license = @License(name = "MIT")
         ),
-        host = "petstore.swagger.io",
-        basePath = "/api",
-        schemes = SwaggerDefinition.Scheme.HTTP,
-        consumes = "application/json",
-        produces = "application/json"
-)
-class Swagplash {}
+    host = "petstore.swagger.io",
+    basePath = "/api",
+    schemes = SwaggerDefinition.Scheme.HTTP,
+    consumes = "application/json",
+    produces = "application/json")
+    class Swagplash {}
 ```
+
 * **Define your models**: Annotate your model classes with `@ApiModel` and its fields with `@ApiModelProperty`. All primitive fields are required. Non primitive fields are required unless they have the `@Nullable` annotation:
 
-``` java
+```java
 @ApiModel
 public class Pet {
 
@@ -65,12 +64,13 @@ public class Pet {
     @ApiModelProperty
     @Nullable private String tag;
 
+    ...
 }
 ```
 
 * **Define your controllers**: Annotate your controllers with `@Api`:
 
-``` java
+```java
 @Api
 public class PetController {
     ...
@@ -79,66 +79,137 @@ public class PetController {
 
 * **Define your endpoints**: Annotate your methods with `@ApiOperation`
 
-``` java
+```java
 @ApiOperation(
-            description = "Returns all pets from the system that the user has access to",
-            httpMethod = ApiOperation.HttpMethod.GET,
-            path = "/pets")
-    @ApiResponse(
-            code = 200,
-            message = "A list of pets.",
-            responseContainer = "List",
-            response = Pet.class
-    )
-    public Result getPets() {
-        ...
-    }
+    description = "Returns all pets from the system that the user has access to",
+    httpMethod = ApiOperation.HttpMethod.GET,
+    path = "/pets")
+@ApiResponse(
+    code = 200,
+    message = "A list of pets.",
+    responseContainer = "List",
+    response = Pet.class)
+public Result getPets() {
+    ...
+}
 ``` 
 
-* **Compile**: And you're done! Your `Swagger.json` file will be generated and stored at `{your project path}/target/scala-2.11/classes/Swagger.json`. The only remaining thing is to create and endpoint that will serve that file:
+* **Compile**: And you're done! Your `Swagger.json` file will be generated and stored at `{your project path}/target/scala-2.11/classes/Swagger.json`. The only remaining thing is to create and endpoint that will serve that file. Or you can just use `SwagplashProvider` in combination with `SwagplashMapper` to serve the json:
+
+```java
+public CompletionStage<Result> getDoc() {
+    return provider.get()
+            .thenApply(swagger -> {
+                try {
+                    return ok(mapper.writeValueAsString(swagger));
+                } catch (JsonProcessingException e) {
+                    return internalServerError("Something failed while writing swagger.json");
+                }
+            });
+    }
+    
+```
+
+---
+
+## Extra usage
+
+As said before, **Swagplash** provides body parameters check and security check
+
+### Body parameter check
+
+Annotate your method with `@ApiBodyParam`. It will check that the body passed has the field indicated in the `name` property. It will also check its type. Once the method is reached (all parameters were ok) you can receive them via `ctx().args.get(name)` and cast them to the expected type. Be aware that if the parameter is not required it will passed as an `Optional`
+
+```java
+@ApiOperation(httpMethod = POST, path = "/somePath")
+@ApiBodyParam(name = "someParam", required = true)
+@ApiBodyParam(name = "otherParam")
+public Result doSomething() {
+    String someParam = (String) ctx().args.get("someParam");
+    Optional<String> otherParam = (Optional<String>) ctx().args.get("otherParam");
+    ....
+}        
+```
+
+Current supported types are:
+* String (default)
+* Integer
+* Boolean
+* Date (ISO-8601 Date format. e.g. `2016-06-01` or `2016-06-01+02:00`)
+* OffsetTime (ISO-8601 time format. e.g. `10:00:00` or `10:00:00+02:00`)
+* Duration (ISO-8601 duration format. e.g. `P23DT23H`)
+* MongoId (Performs a check assuring that this value can became a valid `ObjectId` **but it will passed to the controller as a `String`**. You know, your controller doesn't need to know that you are working with MongoDB)
+
+
+### Security check
+
+You'll have to provide a class that implements `AuthorizationCheck`. Its `doCheck` method will be called with the context and the delegate that should do the following action. If the call is authorized to perform the action `delegate.call(ctx)` should be returned. Otherwise return the `Result` wrapped into a `CompletableFuture.completedValue`
 
 ``` java
-public class DocController extends Controller {
+public class SomeAuthorization implements AuthorizationCheck {
 
-    private final Application application;
-
-    @Inject
-    public DocController(Application application) {
-        this.application = application;
+    @Override
+    public CompletionStage<Result> doCheck(Http.Context ctx, Action<?> delegate) {
+        if (checkSomething())
+            return delegate.call(ctx);
+        else
+            return CompletableFuture.completedValue(forbidden());
     }
 
-    public CompletionStage<Result> getDoc() {
-        return CompletableFuture.supplyAsync(() -> {
-            File swagger = application.getFile("target/scala-2.11/classes/swagger.json");
+}
+```
+ You'll also need to tell Guice (the DI framework Play Framework works with) how to load your `AuthorizationCheck` class. You can find more info about this [in the Dependency Injection](https://www.playframework.com/documentation/2.5.x/JavaDependencyInjection#programmatic-bindings) section of the Play Framework doc.
+ If you're too lazy to read it (shame on you) here is the snippet you'll need:
 
-            BufferedReader br = null;
-            try {
-                br = new BufferedReader(new FileReader(swagger));
-            } catch (FileNotFoundException e) {
-                return internalServerError("Swagger file not found!");
-            }
-            try {
-                StringBuilder sb = new StringBuilder();
-                String line = br.readLine();
-
-                while (line != null) {
-                    sb.append(line);
-                    sb.append("\n");
-                    line = br.readLine();
-                }
-                return ok(sb.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return internalServerError("Fail while reading Swagger file!");
-
-        });
+``` java
+public class MyAuthorizationModule extends AbstractModule {
+    @Override
+    protected void configure() {
+        bind(AuthorizationCheck.class).to(MyAuthorizationCheck.class);
     }
 }
 ```
+and add this line to your `conf/aplication.conf`:
+
+    play.modules.enabled += "some.package.MyAuthorizationModule"
+
+This way you specify a **default** `AuthorizationCheck` class. But in some methods you may want to specify a different `AuthorizationCheck`. You can do it by specifying it in the `@SecureEndPoint` annotation:
+
+``` java
+@SecureEndPoint(value = "other", alternateChecker = OtherChecker.class)
+public Result anotherCheckMethod() {
+    ...
+}
+```
+
+This `AuthorizationCheck` class should also has `@SecureDefinition` in order to generate Swagger documentation:
+
+``` java
+@SecureDefinition(name = "special")
+public class SpecialAuth implements AuthorizationCheck {
+
+    @Override
+    public CompletionStage<Result> doCheck(Http.Context context, Action<?> delegate) {
+        ...
+    }
+
+}
+```
+
+---
+
+##License
+ 
+    Copyright 2016 Alberto Sanz
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.

@@ -81,5 +81,4 @@ public class SwagplashMapper extends ObjectMapper {
             return spApiOperationSecurity;
         }
     }
-
 }
