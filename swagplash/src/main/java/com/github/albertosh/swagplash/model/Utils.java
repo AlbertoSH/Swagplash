@@ -1,13 +1,11 @@
 package com.github.albertosh.swagplash.model;
 
 import com.github.albertosh.swagplash.annotations.ApiModel;
-import scala.annotation.meta.field;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
@@ -42,7 +40,7 @@ public class Utils {
     }
 
     public static String getTypeOfArrayItems(VariableElement element) {
-        String declaredType = element.asType().toString().replaceAll("\\[\\]","");
+        String declaredType = element.asType().toString().replaceAll("\\[\\]", "");
         return getType(declaredType, element);
     }
 
@@ -58,6 +56,7 @@ public class Utils {
         String transformed = type.replaceAll(".+\\.", "").toLowerCase();
         switch (transformed) {
             case "int":
+            case "integer":
             case "long":
                 return "integer";
             case "string":
@@ -89,6 +88,7 @@ public class Utils {
         String transformed = type.replaceAll(".+\\.", "").toLowerCase();
         switch (transformed) {
             case "int":
+            case "integer":
                 return "int32";
             case "long":
                 return "int64";

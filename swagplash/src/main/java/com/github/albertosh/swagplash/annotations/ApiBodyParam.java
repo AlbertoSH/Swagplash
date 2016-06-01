@@ -5,15 +5,11 @@ import com.github.albertosh.swagplash.actions.ApiBodyParamAction;
 import play.mvc.With;
 
 import java.lang.annotation.*;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.OffsetTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-
-import static play.mvc.Results.badRequest;
-import static play.mvc.Results.redirect;
 
 @With(ApiBodyParamAction.class)
 @Target({ElementType.METHOD})
@@ -152,13 +148,75 @@ public @interface ApiBodyParam {
                 try {
                     return OffsetTime.parse(valueAsText, DateTimeFormatter.ISO_OFFSET_TIME);
                 } catch (DateTimeParseException e) {
-                    return Optional.of(CompletableFuture.completedFuture(badRequest("Field \"" + name + "\" must be a valid time value with valid format: \n"
-                            + "e.g. \"" + OffsetTime.now().format(DateTimeFormatter.ISO_TIME) + "\"")));
+                    throw new IllegalArgumentException("Field \"" + name + "\" must be a valid time value with valid format: \n"
+                            + "e.g. \"" + OffsetTime.now().format(DateTimeFormatter.ISO_TIME) + "\"");
+                }
+            }
+        },
+        MONGO_ID {
+            @Override
+            public String getType() {
+                return "string";
+            }
+
+            @Override
+            public String getFormat() {
+                return null;
+            }
+
+            @Override
+            public Object toArgs(JsonNode node, String name) throws IllegalArgumentException {
+                String valueAsText = node.asText();
+                if (isValid(valueAsText))
+                    return valueAsText;
+                else
+                    throw new IllegalArgumentException("Field \"" + name + "\" must be a valid MongoId!");
+            }
+
+            /**
+             * Taken from org.bson.types.ObjectId
+             * @return
+             */
+            private boolean isValid(String hexString) {
+                int len = hexString.length();
+                if (len != 24) {
+                    return false;
+                } else {
+                    for (int i = 0; i < len; ++i) {
+                        char c = hexString.charAt(i);
+                        if ((c < 48 || c > 57) && (c < 97 || c > 102) && (c < 65 || c > 70)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+        },
+        DURATION {
+            @Override
+            public String getType() {
+                return "string";
+            }
+
+            @Override
+            public String getFormat() {
+                return null;
+            }
+
+            @Override
+            public Object toArgs(JsonNode node, String name) throws IllegalArgumentException {
+                String valueAsText = node.asText();
+                try {
+                    return Duration.parse(valueAsText);
+                } catch (DateTimeParseException e) {
+                    throw new IllegalArgumentException("Field \"" + name + "\" must be a valid duration value with valid format following the ISO-8601: \n"
+                            + "e.g. \"P2DT3H4M\"");
                 }
             }
         };
 
         public abstract String getType();
+
         public abstract String getFormat();
 
         public abstract Object toArgs(JsonNode node, String name) throws IllegalArgumentException;

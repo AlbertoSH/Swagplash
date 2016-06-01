@@ -19,7 +19,6 @@ public class PetController {
             responseContainer = "List",
             response = Pet.class
     )
-    @SecureEndPoint("dumb")
     public Result getPets() {
         return null;
     }

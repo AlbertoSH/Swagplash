@@ -12,20 +12,20 @@ public class SPLicense {
         url = license.url();
     }
 
+    public SPLicense() {
+    }
+
     public String getName() {
         return name.isEmpty() ? null : name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public SPLicense() {
     }
 
     public SPLicense setName(String name) {
         this.name = name;
         return this;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public SPLicense setUrl(String url) {

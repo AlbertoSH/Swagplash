@@ -51,10 +51,6 @@ public @interface ApiOperation {
      */
     boolean hidden() default false;
 
-    public enum HttpMethod {
-        GET, POST, PUT, DELETE
-    }
-
     /**
      * Corresponds to the `produces` field of the operation.
      */
@@ -64,4 +60,8 @@ public @interface ApiOperation {
      * Corresponds to the `consumes` field of the operation.
      */
     String[] consumes() default {};
+
+    public enum HttpMethod {
+        GET, POST, PUT, DELETE
+    }
 }

@@ -23,9 +23,19 @@ uploadArchives {
             repository(url: "http://localhost:8081/nexus/repository/hightrack") {
                 authentication(userName: "admin", password: "admin123")
             }
-            pom.version = "1.0.0-SNAPSHOT"
+            pom.version = "1.0.0"
             pom.artifactId = "swagplash"
             pom.groupId = "com.github.albertosh"
+
         }
     }
+}
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
 }

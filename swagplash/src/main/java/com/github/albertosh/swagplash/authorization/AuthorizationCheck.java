@@ -13,6 +13,7 @@ public interface AuthorizationCheck {
 
     /**
      * Performs a check.
+     *
      * @param ctx
      * @param delegate
      * @return delegate.call(ctx) if everything went OK. CompletionStage<Result> with the result otherwise

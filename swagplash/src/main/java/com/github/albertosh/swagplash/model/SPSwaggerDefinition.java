@@ -1,6 +1,7 @@
 package com.github.albertosh.swagplash.model;
 
 import com.github.albertosh.swagplash.annotations.SwaggerDefinition;
+
 import javax.lang.model.element.Element;
 import java.util.*;
 
@@ -31,46 +32,6 @@ public class SPSwaggerDefinition {
     public SPSwaggerDefinition() {
     }
 
-    public SPSwaggerDefinition setInfo(SPInfo info) {
-        this.info = info;
-        return this;
-    }
-
-    public SPSwaggerDefinition setHost(String host) {
-        this.host = host;
-        return this;
-    }
-
-    public SPSwaggerDefinition setBasePath(String basePath) {
-        this.basePath = basePath;
-        return this;
-    }
-
-    public SPSwaggerDefinition setSchemes(List<String> schemes) {
-        this.schemes = schemes;
-        return this;
-    }
-
-    public SPSwaggerDefinition setConsumes(List<String> consumes) {
-        this.consumes = consumes;
-        return this;
-    }
-
-    public SPSwaggerDefinition setProduces(List<String> produces) {
-        this.produces = produces;
-        return this;
-    }
-
-    public SPSwaggerDefinition setPaths(Map<String, Map<String, SPApiOperation>> paths) {
-        this.paths = paths;
-        return this;
-    }
-
-    public SPSwaggerDefinition setDefinitions(Map<String, SPApiModel> definitions) {
-        this.definitions = definitions;
-        return this;
-    }
-
     public String getSwagger() {
         return swagger;
     }
@@ -79,32 +40,72 @@ public class SPSwaggerDefinition {
         return info;
     }
 
+    public SPSwaggerDefinition setInfo(SPInfo info) {
+        this.info = info;
+        return this;
+    }
+
     public String getHost() {
         return host;
+    }
+
+    public SPSwaggerDefinition setHost(String host) {
+        this.host = host;
+        return this;
     }
 
     public String getBasePath() {
         return basePath;
     }
 
+    public SPSwaggerDefinition setBasePath(String basePath) {
+        this.basePath = basePath;
+        return this;
+    }
+
     public List<String> getSchemes() {
         return schemes;
+    }
+
+    public SPSwaggerDefinition setSchemes(List<String> schemes) {
+        this.schemes = schemes;
+        return this;
     }
 
     public List<String> getConsumes() {
         return consumes;
     }
 
+    public SPSwaggerDefinition setConsumes(List<String> consumes) {
+        this.consumes = consumes;
+        return this;
+    }
+
     public List<String> getProduces() {
         return produces;
+    }
+
+    public SPSwaggerDefinition setProduces(List<String> produces) {
+        this.produces = produces;
+        return this;
     }
 
     public Map<String, Map<String, SPApiOperation>> getPaths() {
         return paths;
     }
 
+    public SPSwaggerDefinition setPaths(Map<String, Map<String, SPApiOperation>> paths) {
+        this.paths = paths;
+        return this;
+    }
+
     public Map<String, SPApiModel> getDefinitions() {
         return definitions;
+    }
+
+    public SPSwaggerDefinition setDefinitions(Map<String, SPApiModel> definitions) {
+        this.definitions = definitions;
+        return this;
     }
 
     public Map<String, SPSecureDefinition> getSecurityDefinitions() {
@@ -123,7 +124,7 @@ public class SPSwaggerDefinition {
         }
         if (path.containsKey(apiOperation.getMethod())) {
             Utils.warning("Overriding previous method " + apiOperation.getMethod()
-                    + " at path " + apiOperation.getPath(),
+                            + " at path " + apiOperation.getPath(),
                     method);
         }
         path.put(apiOperation.getMethod(), apiOperation);

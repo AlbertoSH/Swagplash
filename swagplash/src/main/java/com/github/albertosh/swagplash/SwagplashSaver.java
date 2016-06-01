@@ -1,6 +1,5 @@
 package com.github.albertosh.swagplash;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.albertosh.swagplash.model.SPSwaggerDefinition;
 

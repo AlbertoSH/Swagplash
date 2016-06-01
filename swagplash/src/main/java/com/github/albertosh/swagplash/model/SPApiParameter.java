@@ -1,7 +1,6 @@
 package com.github.albertosh.swagplash.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.albertosh.swagplash.annotations.ApiBodyParam;
 import com.github.albertosh.swagplash.annotations.ApiPathParam;
 import com.github.albertosh.swagplash.annotations.ApiQueryParam;
 
@@ -19,6 +18,9 @@ public class SPApiParameter {
     private String format;
     private SPItems items;
 
+    public SPApiParameter() {
+    }
+
     public static SPApiParameter newPathParameter(ApiPathParam apiPathParam, VariableElement paramElement) {
         SPApiParameter parameter = new SPApiParameter();
         parameter.name = apiPathParam.name().isEmpty() ? paramElement.getSimpleName().toString() : apiPathParam.name();
@@ -29,7 +31,6 @@ public class SPApiParameter {
         parameter.format = Utils.getFormat(paramElement);
         return parameter;
     }
-
 
     public static SPApiParameter newQueryParameter(ApiQueryParam apiQueryParam, VariableElement paramElement) {
         SPApiParameter parameter = new SPApiParameter();
@@ -58,16 +59,36 @@ public class SPApiParameter {
         return name;
     }
 
+    public SPApiParameter setName(String name) {
+        this.name = name;
+        return this;
+    }
+
     public String getIn() {
         return in;
+    }
+
+    public SPApiParameter setIn(String in) {
+        this.in = in;
+        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public SPApiParameter setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
     public boolean isRequired() {
         return required;
+    }
+
+    public SPApiParameter setRequired(boolean required) {
+        this.required = required;
+        return this;
     }
 
     @JsonProperty("default")
@@ -78,48 +99,13 @@ public class SPApiParameter {
             return null;
     }
 
-    public SPSchema getSchema() {
-        return schema;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public SPItems getItems() {
-        return items;
-    }
-
-    public SPApiParameter() {
-    }
-
-    public SPApiParameter setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public SPApiParameter setIn(String in) {
-        this.in = in;
-        return this;
-    }
-
-    public SPApiParameter setDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    public SPApiParameter setRequired(boolean required) {
-        this.required = required;
-        return this;
-    }
-
     public SPApiParameter setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
         return this;
+    }
+
+    public SPSchema getSchema() {
+        return schema;
     }
 
     public SPApiParameter setSchema(SPSchema schema) {
@@ -127,14 +113,26 @@ public class SPApiParameter {
         return this;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public SPApiParameter setType(String type) {
         this.type = type;
         return this;
     }
 
+    public String getFormat() {
+        return format;
+    }
+
     public SPApiParameter setFormat(String format) {
         this.format = format;
         return this;
+    }
+
+    public SPItems getItems() {
+        return items;
     }
 
     public SPApiParameter setItems(SPItems items) {

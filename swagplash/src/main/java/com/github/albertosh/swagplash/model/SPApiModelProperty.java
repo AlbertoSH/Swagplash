@@ -53,30 +53,12 @@ public class SPApiModelProperty {
         }
     }
 
+    public SPApiModelProperty() {
+    }
+
     @JsonIgnore
     public String getName() {
         return name;
-    }
-
-    @JsonIgnore
-    public boolean isRequired() {
-        return required;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-
-    public SPApiModelProperty() {
     }
 
     public SPApiModelProperty setName(String name) {
@@ -84,9 +66,18 @@ public class SPApiModelProperty {
         return this;
     }
 
+    @JsonIgnore
+    public boolean isRequired() {
+        return required;
+    }
+
     public SPApiModelProperty setRequired(boolean required) {
         this.required = required;
         return this;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public SPApiModelProperty setDescription(String description) {
@@ -94,9 +85,17 @@ public class SPApiModelProperty {
         return this;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public SPApiModelProperty setType(String type) {
         this.type = type;
         return this;
+    }
+
+    public String getFormat() {
+        return format;
     }
 
     public SPApiModelProperty setFormat(String format) {

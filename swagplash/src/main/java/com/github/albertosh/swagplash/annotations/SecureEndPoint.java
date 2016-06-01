@@ -15,6 +15,7 @@ public @interface SecureEndPoint {
 
     /**
      * Security definition used
+     *
      * @return
      */
     String value();

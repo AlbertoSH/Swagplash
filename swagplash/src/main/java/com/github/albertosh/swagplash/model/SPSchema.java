@@ -1,7 +1,6 @@
 package com.github.albertosh.swagplash.model;
 
 import com.github.albertosh.swagplash.annotations.ApiBodyParam;
-import com.github.albertosh.swagplash.annotations.ApiModelProperty;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
@@ -61,29 +60,13 @@ public class SPSchema {
         return $ref;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public SPItems getItems() {
-        return items;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public List<String> getRequired() {
-        return required;
-    }
-
-    public Map<String, SPApiModelProperty> getProperties() {
-        return properties;
-    }
-
     public SPSchema set$ref(String $ref) {
         this.$ref = $ref;
         return this;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public SPSchema setType(String type) {
@@ -91,9 +74,17 @@ public class SPSchema {
         return this;
     }
 
+    public SPItems getItems() {
+        return items;
+    }
+
     public SPSchema setItems(SPItems items) {
         this.items = items;
         return this;
+    }
+
+    public String getFormat() {
+        return format;
     }
 
     public SPSchema setFormat(String format) {
@@ -101,12 +92,8 @@ public class SPSchema {
         return this;
     }
 
-
-    public SPSchema addProperty(SPApiModelProperty property) {
-        this.properties.put(property.getName(), property);
-        if (property.isRequired())
-            required.add(property.getName());
-        return this;
+    public List<String> getRequired() {
+        return required;
     }
 
     public SPSchema setRequired(List<String> required) {
@@ -114,8 +101,19 @@ public class SPSchema {
         return this;
     }
 
+    public Map<String, SPApiModelProperty> getProperties() {
+        return properties;
+    }
+
     public SPSchema setProperties(Map<String, SPApiModelProperty> properties) {
         this.properties = properties;
+        return this;
+    }
+
+    public SPSchema addProperty(SPApiModelProperty property) {
+        this.properties.put(property.getName(), property);
+        if (property.isRequired())
+            required.add(property.getName());
         return this;
     }
 }

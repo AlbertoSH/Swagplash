@@ -29,6 +29,77 @@ public class SPItems {
         return new Builder();
     }
 
+    public String get$ref() {
+        return $ref;
+    }
+
+    public SPItems set$ref(String $ref) {
+        this.$ref = $ref;
+        return this;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public SPItems setType(String type) {
+        this.type = type;
+        return this;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public SPItems setFormat(String format) {
+        this.format = format;
+        return this;
+    }
+
+    public SPItems getItems() {
+        return items;
+    }
+
+    public SPItems setItems(SPItems items) {
+        this.items = items;
+        return this;
+    }
+
+    public Number getMaximum() {
+        return maximum;
+    }
+
+    public SPItems setMaximum(Number maximum) {
+        this.maximum = maximum;
+        return this;
+    }
+
+    public Boolean isExclusiveMaximum() {
+        return exclusiveMaximum;
+    }
+
+    public Number getMinimum() {
+        return minimum;
+    }
+
+    public SPItems setMinimum(Number minimum) {
+        this.minimum = minimum;
+        return this;
+    }
+
+    public Boolean isExclusiveMinimum() {
+        return exclusiveMinimum;
+    }
+
+    public SPItems setExclusiveMaximum(Boolean exclusiveMaximum) {
+        this.exclusiveMaximum = exclusiveMaximum;
+        return this;
+    }
+
+    public SPItems setExclusiveMinimum(Boolean exclusiveMinimum) {
+        this.exclusiveMinimum = exclusiveMinimum;
+        return this;
+    }
 
     public static final class Builder {
         private String $ref;
@@ -86,78 +157,5 @@ public class SPItems {
         public SPItems build() {
             return new SPItems(this);
         }
-    }
-
-    public String get$ref() {
-        return $ref;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public SPItems getItems() {
-        return items;
-    }
-
-    public Number getMaximum() {
-        return maximum;
-    }
-
-    public Boolean isExclusiveMaximum() {
-        return exclusiveMaximum;
-    }
-
-    public Number getMinimum() {
-        return minimum;
-    }
-
-    public Boolean isExclusiveMinimum() {
-        return exclusiveMinimum;
-    }
-
-
-    public SPItems set$ref(String $ref) {
-        this.$ref = $ref;
-        return this;
-    }
-
-    public SPItems setType(String type) {
-        this.type = type;
-        return this;
-    }
-
-    public SPItems setFormat(String format) {
-        this.format = format;
-        return this;
-    }
-
-    public SPItems setItems(SPItems items) {
-        this.items = items;
-        return this;
-    }
-
-    public SPItems setMaximum(Number maximum) {
-        this.maximum = maximum;
-        return this;
-    }
-
-    public SPItems setExclusiveMaximum(Boolean exclusiveMaximum) {
-        this.exclusiveMaximum = exclusiveMaximum;
-        return this;
-    }
-
-    public SPItems setMinimum(Number minimum) {
-        this.minimum = minimum;
-        return this;
-    }
-
-    public SPItems setExclusiveMinimum(Boolean exclusiveMinimum) {
-        this.exclusiveMinimum = exclusiveMinimum;
-        return this;
     }
 }

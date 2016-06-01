@@ -2,7 +2,6 @@ package com.github.albertosh.swagplash.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.albertosh.swagplash.annotations.*;
-import scala.annotation.meta.param;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
@@ -51,6 +50,9 @@ public class SPApiOperation {
         for (SecureEndPoint secureEndPoint : secureEndPoints) {
             security.add(new SPSecureEndPoint(secureEndPoint));
         }
+    }
+
+    public SPApiOperation() {
     }
 
     private void buildParameters(ExecutableElement method) {
@@ -106,37 +108,82 @@ public class SPApiOperation {
         return path;
     }
 
+    public SPApiOperation setPath(String path) {
+        this.path = path;
+        return this;
+    }
+
     @JsonIgnore
     public String getMethod() {
         return method;
+    }
+
+    public SPApiOperation setMethod(String method) {
+        this.method = method;
+        return this;
     }
 
     public String getSummary() {
         return summary;
     }
 
+    public SPApiOperation setSummary(String summary) {
+        this.summary = summary;
+        return this;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public SPApiOperation setDescription(String description) {
+        this.description = description;
+        return this;
     }
 
     public List<String> getTags() {
         return tags;
     }
 
+    public SPApiOperation setTags(List<String> tags) {
+        this.tags = tags;
+        return this;
+    }
+
     public List<String> getProduces() {
         return produces;
+    }
+
+    public SPApiOperation setProduces(List<String> produces) {
+        this.produces = produces;
+        return this;
     }
 
     public List<String> getConsumes() {
         return consumes;
     }
 
+    public SPApiOperation setConsumes(List<String> consumes) {
+        this.consumes = consumes;
+        return this;
+    }
+
     public List<SPApiParameter> getParameters() {
         return parameters;
     }
 
+    public SPApiOperation setParameters(List<SPApiParameter> parameters) {
+        this.parameters = parameters;
+        return this;
+    }
+
     public Map<String, SPResponse> getResponses() {
         return responses;
+    }
+
+    public SPApiOperation setResponses(Map<String, SPResponse> responses) {
+        this.responses = responses;
+        return this;
     }
 
     public SPApiOperationSecurity getSecurity() {
@@ -145,54 +192,6 @@ public class SPApiOperation {
 
     public SPApiOperation setSecurity(SPApiOperationSecurity security) {
         this.security = security;
-        return this;
-    }
-
-    public SPApiOperation() {
-    }
-
-    public SPApiOperation setPath(String path) {
-        this.path = path;
-        return this;
-    }
-
-    public SPApiOperation setMethod(String method) {
-        this.method = method;
-        return this;
-    }
-
-    public SPApiOperation setSummary(String summary) {
-        this.summary = summary;
-        return this;
-    }
-
-    public SPApiOperation setDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    public SPApiOperation setTags(List<String> tags) {
-        this.tags = tags;
-        return this;
-    }
-
-    public SPApiOperation setProduces(List<String> produces) {
-        this.produces = produces;
-        return this;
-    }
-
-    public SPApiOperation setConsumes(List<String> consumes) {
-        this.consumes = consumes;
-        return this;
-    }
-
-    public SPApiOperation setParameters(List<SPApiParameter> parameters) {
-        this.parameters = parameters;
-        return this;
-    }
-
-    public SPApiOperation setResponses(Map<String, SPResponse> responses) {
-        this.responses = responses;
         return this;
     }
 

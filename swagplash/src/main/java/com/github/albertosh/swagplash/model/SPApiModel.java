@@ -24,34 +24,12 @@ public class SPApiModel {
         properties = new LinkedHashMap<>();
     }
 
+    public SPApiModel() {
+    }
+
     @JsonIgnore
     public String getName() {
         return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public List<String> getRequired() {
-        return required;
-    }
-
-    public Map<String, SPApiModelProperty> getProperties() {
-        return properties;
-    }
-
-    public void addProperty(SPApiModelProperty property) {
-        properties.put(property.getName(), property);
-        if (property.isRequired())
-            required.add(property.getName());
-    }
-
-    public SPApiModel() {
     }
 
     public SPApiModel setName(String name) {
@@ -59,9 +37,17 @@ public class SPApiModel {
         return this;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public SPApiModel setDescription(String description) {
         this.description = description;
         return this;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public SPApiModel setType(String type) {
@@ -69,13 +55,27 @@ public class SPApiModel {
         return this;
     }
 
+    public List<String> getRequired() {
+        return required;
+    }
+
     public SPApiModel setRequired(List<String> required) {
         this.required = required;
         return this;
     }
 
+    public Map<String, SPApiModelProperty> getProperties() {
+        return properties;
+    }
+
     public SPApiModel setProperties(Map<String, SPApiModelProperty> properties) {
         this.properties = properties;
         return this;
+    }
+
+    public void addProperty(SPApiModelProperty property) {
+        properties.put(property.getName(), property);
+        if (property.isRequired())
+            required.add(property.getName());
     }
 }

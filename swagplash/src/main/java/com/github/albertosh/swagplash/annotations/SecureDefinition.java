@@ -1,10 +1,11 @@
 package com.github.albertosh.swagplash.annotations;
 
-import com.github.albertosh.swagplash.actions.AuthorizationAction;
 import play.mvc.Http;
-import play.mvc.With;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
@@ -12,6 +13,7 @@ public @interface SecureDefinition {
 
     /**
      * If empty the class name will be taken
+     *
      * @return
      */
     String value() default "";

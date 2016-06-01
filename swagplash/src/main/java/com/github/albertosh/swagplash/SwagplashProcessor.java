@@ -9,7 +9,7 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
-import java.util.*;
+import java.util.Set;
 
 @SupportedAnnotationTypes({
         "com.github.albertosh.swagplash.annotations.SwaggerDefinition"
@@ -120,7 +120,6 @@ public class SwagplashProcessor
         SPSecureDefinition spSecureDefinition = new SPSecureDefinition(secureDefinition, (TypeElement) secureDefinitionElement);
         swagger.addSecureDefinition(spSecureDefinition);
     }
-
 
 
     private void processApi(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

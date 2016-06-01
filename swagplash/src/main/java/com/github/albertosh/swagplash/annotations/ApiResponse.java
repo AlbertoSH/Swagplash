@@ -1,7 +1,5 @@
 package com.github.albertosh.swagplash.annotations;
 
-import play.api.mvc.ResponseHeader;
-
 import java.lang.annotation.*;
 
 /**

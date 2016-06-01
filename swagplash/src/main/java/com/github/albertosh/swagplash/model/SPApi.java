@@ -4,7 +4,9 @@ import com.github.albertosh.swagplash.annotations.Api;
 import com.github.albertosh.swagplash.annotations.SecureEndPoint;
 
 import javax.lang.model.element.TypeElement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class SPApi {
 
@@ -41,9 +43,17 @@ public class SPApi {
     public SPApi() {
     }
 
+    public List<String> getTags() {
+        return tags;
+    }
+
     public SPApi setTags(List<String> tags) {
         this.tags = tags;
         return this;
+    }
+
+    public List<String> getProduces() {
+        return produces;
     }
 
     public SPApi setProduces(List<String> produces) {
@@ -51,21 +61,13 @@ public class SPApi {
         return this;
     }
 
+    public List<String> getConsumes() {
+        return consumes;
+    }
+
     public SPApi setConsumes(List<String> consumes) {
         this.consumes = consumes;
         return this;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public List<String> getProduces() {
-        return produces;
-    }
-
-    public List<String> getConsumes() {
-        return consumes;
     }
 
     public List<SPSecureEndPoint> getSecurity() {

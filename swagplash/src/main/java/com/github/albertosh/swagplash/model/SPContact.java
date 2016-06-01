@@ -14,20 +14,11 @@ public class SPContact {
         email = contact.email();
     }
 
+    public SPContact() {
+    }
+
     public String getName() {
         return name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-
-    public SPContact() {
     }
 
     public SPContact setName(String name) {
@@ -35,9 +26,17 @@ public class SPContact {
         return this;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
     public SPContact setUrl(String url) {
         this.url = url;
         return this;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public SPContact setEmail(String email) {
