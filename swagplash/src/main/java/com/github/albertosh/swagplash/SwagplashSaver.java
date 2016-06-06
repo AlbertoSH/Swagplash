@@ -19,11 +19,10 @@ public class SwagplashSaver {
 
     public void save(SPSwaggerDefinition swagger, ProcessingEnvironment processingEnv) {
         try {
-            // TODO define this
             FileObject fileObject = processingEnv.getFiler().createResource(
                     StandardLocation.SOURCE_OUTPUT,
                     "",
-                    "Swagger.json"
+                    "swagger.json"
             );
 
             OutputStream os = fileObject.openOutputStream();

@@ -1,5 +1,5 @@
 group 'com.github.albertosh'
-version '1.0.0'
+version '1.0.1'
 
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -25,10 +25,31 @@ buildscript {
 }
 apply plugin: 'com.jfrog.bintray'
 
+apply plugin: 'maven-publish'
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId 'com.github.albertosh'
+            artifactId 'swagplash'
+            version '1.0.1'
+
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
+}
+
 bintray {
     user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
     key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
-    configurations = ['archives']
+    publications = ['mavenJava']
     pkg {
         repo = 'maven'
         name = 'com.github.albertosh.swagplash'
@@ -40,9 +61,9 @@ bintray {
         githubRepo = 'AlbertoSH/Swagplash'
         githubReleaseNotesFile = 'README.md'
         version {
-            name = '1.0.0'
-            desc = 'Swagplash 1.0.0'
-            vcsTag = '1.0.0'
+            name = '1.0.1'
+            desc = 'Swagplash 1.0.1'
+            vcsTag = '1.0.1'
         }
     }
 }
