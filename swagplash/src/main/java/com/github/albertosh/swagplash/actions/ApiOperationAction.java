@@ -89,7 +89,9 @@ public class ApiOperationAction extends Action<ApiOperation> {
      */
     private Optional<Result> checkProduces(Http.Context ctx, SPSwaggerDefinition swagplash) {
         String[] clientAccept = ctx.request().headers().get(Http.HeaderNames.ACCEPT);
-        if ((clientAccept == null) || clientAccept.length == 0) {
+        if ((clientAccept == null)
+                || clientAccept.length == 0
+                || clientAccept[0].equals("*/*")) {
             return Optional.empty();
         } else {
             List<String> produces = new ArrayList<String>();
