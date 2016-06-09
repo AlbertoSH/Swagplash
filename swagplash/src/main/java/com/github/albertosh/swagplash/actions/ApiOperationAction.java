@@ -90,10 +90,14 @@ public class ApiOperationAction extends Action<ApiOperation> {
     private Optional<Result> checkProduces(Http.Context ctx, SPSwaggerDefinition swagplash) {
         String[] clientAccept = ctx.request().headers().get(Http.HeaderNames.ACCEPT);
         if ((clientAccept == null)
-                || clientAccept.length == 0
-                || clientAccept[0].equals("*/*")) {
+                || clientAccept.length == 0) {
             return Optional.empty();
         } else {
+            for (int i = 0; i < clientAccept.length; i++) {
+                if (clientAccept[i].contains("*/*"))
+                    return Optional.empty();
+            }
+
             List<String> produces = new ArrayList<String>();
             Collections.addAll(produces, configuration.produces());
             if (produces.isEmpty()) {
