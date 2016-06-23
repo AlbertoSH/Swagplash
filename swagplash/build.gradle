@@ -37,7 +37,7 @@ publishing {
             from components.java
             groupId 'com.github.albertosh'
             artifactId 'swagplash'
-            version '1.0.2'
+            version '1.0.3'
 
             artifact sourceJar {
                 classifier "sources"
@@ -61,9 +61,9 @@ bintray {
         githubRepo = 'AlbertoSH/Swagplash'
         githubReleaseNotesFile = 'README.md'
         version {
-            name = '1.0.2'
-            desc = 'Swagplash 1.0.2'
-            vcsTag = '1.0.2'
+            name = '1.0.3'
+            desc = 'Swagplash 1.0.3'
+            vcsTag = '1.0.3'
         }
     }
 }
