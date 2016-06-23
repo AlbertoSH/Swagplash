@@ -26,7 +26,7 @@ public class SPSwaggerDefinition {
             schemes.add(scheme.toString().toLowerCase());
         }
         Collections.addAll(consumes, def.consumes());
-        Collections.addAll(produces, def.consumes());
+        Collections.addAll(produces, def.produces());
     }
 
     public SPSwaggerDefinition() {
