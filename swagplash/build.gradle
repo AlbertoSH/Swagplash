@@ -52,7 +52,7 @@ bintray {
     publications = ['mavenJava']
     pkg {
         repo = 'maven'
-        name = 'com.github.albertosh.swagplash'
+        name = 'swagplash'
         licenses = ['MIT']
         vcsUrl = 'https://github.com/AlbertoSH/Swagplash.git'
         issueTrackerUrl = 'https://github.com/AlbertoSH/Swagplash/issues'
