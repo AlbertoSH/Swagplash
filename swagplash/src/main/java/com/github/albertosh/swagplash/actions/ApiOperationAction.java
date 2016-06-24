@@ -58,26 +58,25 @@ public class ApiOperationAction extends Action<ApiOperation> {
      * @return the error wrapped into an Optional. empty if none
      */
     private Optional<Result> checkConsumes(Http.Context ctx, SPSwaggerDefinition swagplash) {
-        List<String> consumes = new ArrayList<String>();
-        Collections.addAll(consumes, configuration.consumes());
-        if (consumes.isEmpty()) {
-            consumes = swagplash.getConsumes();
-        }
-        if (!consumes.isEmpty()) {
-            Optional<String> contentType = ctx.request().contentType();
-            if (contentType.isPresent()) {
-                String unwrapped = contentType.get();
-                if (consumes.contains(unwrapped))
-                    return Optional.empty();
-                else
-                    return Optional.of(badRequest("This endpoint can't consume " + unwrapped +
-                            ".This endpoint consumes the following content-type: " + String.join(", ", consumes)));
-            } else {
-                return Optional.of(badRequest("This endpoint consumes the following content-type: " + String.join(", ", consumes)));
+        if (!configuration.consumesNothing()) {
+            List<String> consumes = new ArrayList<String>();
+            Collections.addAll(consumes, configuration.consumes());
+            if (consumes.isEmpty()) {
+                consumes = swagplash.getConsumes();
             }
-        } else {
-            return Optional.empty();
+            if (!consumes.isEmpty()) {
+                Optional<String> contentType = ctx.request().contentType();
+                if (contentType.isPresent()) {
+                    String unwrapped = contentType.get();
+                    if (!consumes.contains(unwrapped))
+                        return Optional.of(badRequest("This endpoint can't consume " + unwrapped +
+                                ".This endpoint consumes the following content-type: " + String.join(", ", consumes)));
+                } else {
+                    return Optional.of(badRequest("This endpoint consumes the following content-type: " + String.join(", ", consumes)));
+                }
+            }
         }
+        return Optional.empty();
     }
 
     /**
