@@ -61,6 +61,8 @@ public @interface ApiOperation {
      */
     String[] consumes() default {};
 
+    boolean consumesNothing() default false;
+
     public enum HttpMethod {
         GET, POST, PUT, DELETE
     }
