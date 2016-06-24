@@ -37,10 +37,13 @@ public class SPApiOperation {
         } else {
             produces.addAll(api.getProduces());
         }
-        if (apiOperation.consumes().length > 0) {
-            Collections.addAll(consumes, apiOperation.consumes());
-        } else {
-            consumes.addAll(api.getConsumes());
+
+        if (!apiOperation.consumesNothing()) {
+            if (apiOperation.consumes().length > 0) {
+                Collections.addAll(consumes, apiOperation.consumes());
+            } else {
+                consumes.addAll(api.getConsumes());
+            }
         }
 
         buildParameters(method);

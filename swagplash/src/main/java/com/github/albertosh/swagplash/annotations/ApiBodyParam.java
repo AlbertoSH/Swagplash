@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.OffsetTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.regex.Pattern;
 
 @With(ApiBodyParamAction.class)
 @Target({ElementType.METHOD})
@@ -57,6 +58,28 @@ public @interface ApiBodyParam {
 
             @Override
             public Object toArgs(JsonNode node, String name) {
+                String value;
+                if (node.isNull())
+                    value = null;
+                else
+                    value = node.asText();
+
+                return value;
+            }
+        },
+        PASSWORD {
+            @Override
+            public String getType() {
+                return "string";
+            }
+
+            @Override
+            public String getFormat() {
+                return "password";
+            }
+
+            @Override
+            public Object toArgs(JsonNode node, String name) throws IllegalArgumentException {
                 String value;
                 if (node.isNull())
                     value = null;
@@ -212,6 +235,29 @@ public @interface ApiBodyParam {
                     throw new IllegalArgumentException("Field \"" + name + "\" must be a valid duration value with valid format following the ISO-8601: \n"
                             + "e.g. \"P2DT3H4M\"");
                 }
+            }
+        },
+        HEXA_COLOR {
+            private final String HEXA_COLOR_REGEX = "^#([0-9A-F]{3}|[0-9A-F]{6}|[0-9A-F]{8})$";
+            @Override
+            public String getType() {
+                return "string";
+            }
+
+            @Override
+            public String getFormat() {
+                return null;
+            }
+
+            @Override
+            public Object toArgs(JsonNode node, String name) throws IllegalArgumentException {
+                String value = node.asText();
+                Pattern pattern = Pattern.compile(HEXA_COLOR_REGEX);
+                if (pattern.matcher(value).matches())
+                    return value;
+                else
+                    throw new IllegalArgumentException("Field \"" + name + "\" must be a valid color value\n"
+                            + "e.g. \"#AAA\", \"#FFFFFF\", \"#FF0000FF\"");
             }
         };
 
