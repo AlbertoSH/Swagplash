@@ -3,6 +3,7 @@ package com.github.albertosh.swagplash.actions;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.albertosh.swagplash.annotations.ApiBodyParam;
 import play.Logger;
+import play.libs.Json;
 import play.mvc.Action;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -18,8 +19,16 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
         Optional<String> contentType = ctx.request().contentType();
         if (contentType.isPresent()) {
             if (contentType.get().contains("json")) {
-                JsonNode node = ctx.request().body().asJson();
-                JsonNode param = node.get(configuration.name());
+                String asJsonString = ctx.request().body().asBytes().decodeString("UTF-8");
+                JsonNode node = Json.parse(asJsonString);
+                JsonNode param = null;
+                if (contentType.get().equals("application/vnd.api+json")) {
+                    try {
+                        param = node.get("data").get("attributes").get(configuration.name());
+                    } catch (NullPointerException e) {}
+                } else {
+                    param = node.get(configuration.name());
+                }
                 if (configuration.required()) {
                     if (param == null) {
                         return CompletableFuture.completedFuture(badRequest("Field \"" + configuration.name() + "\" not found!"));
