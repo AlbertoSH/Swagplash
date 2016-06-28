@@ -238,7 +238,7 @@ public @interface ApiBodyParam {
             }
         },
         HEXA_COLOR {
-            private final String HEXA_COLOR_REGEX = "^#([0-9A-F]{3}|[0-9A-F]{6}|[0-9A-F]{8})$";
+            private final String HEXA_COLOR_REGEX = "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$";
             @Override
             public String getType() {
                 return "string";
