@@ -1,5 +1,6 @@
 package com.github.albertosh.swagplash.actions;
 
+import com.github.albertosh.swagplash.SwagplashProvider;
 import com.github.albertosh.swagplash.annotations.ApiOperation;
 import com.github.albertosh.swagplash.model.SPSwaggerDefinition;
 import play.Logger;

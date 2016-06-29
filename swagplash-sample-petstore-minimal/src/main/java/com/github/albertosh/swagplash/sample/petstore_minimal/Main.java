@@ -1,8 +1,6 @@
 package com.github.albertosh.swagplash.sample.petstore_minimal;
 
 import com.github.albertosh.swagplash.SwagplashMapper;
-import com.github.albertosh.swagplash.actions.SwagplashProvider;
-import com.github.albertosh.swagplash.annotations.SwaggerDefinition;
 import com.github.albertosh.swagplash.model.SPSwaggerDefinition;
 
 import java.io.File;
