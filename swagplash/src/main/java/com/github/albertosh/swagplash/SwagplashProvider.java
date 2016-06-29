@@ -1,4 +1,4 @@
-package com.github.albertosh.swagplash.actions;
+package com.github.albertosh.swagplash;
 
 import com.github.albertosh.swagplash.SwagplashMapper;
 import com.github.albertosh.swagplash.model.SPSwaggerDefinition;
@@ -9,6 +9,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -29,7 +31,8 @@ public class SwagplashProvider implements Provider<CompletionStage<SPSwaggerDefi
     public CompletionStage<SPSwaggerDefinition> get() {
         return CompletableFuture.supplyAsync(() -> {
             if (swaggerDefinition == null) {
-                File swagger = application.getFile("target/scala-2.11/classes/swagger.json");
+                InputStream swagger = application.resourceAsStream("swagger.json");
+
                 try {
                     swaggerDefinition = mapper.readValue(swagger, SPSwaggerDefinition.class);
                 } catch (IOException e) {
