@@ -1,2 +1,7 @@
+ext {
+    version = '1.2.1'
+}
+
 group 'com.github.albertosh'
-version '1.2.0'
+version ext.version
+
