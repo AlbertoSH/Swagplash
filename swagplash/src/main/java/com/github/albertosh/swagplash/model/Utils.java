@@ -61,6 +61,8 @@ public class Utils {
                 return "integer";
             case "string":
                 return "string";
+            case "boolean":
+                return "boolean";
             default:
                 warning("Unsupported type", field);
                 return null;
@@ -143,6 +145,8 @@ public class Utils {
                 }
             case "string":
                 return defaultValue;
+            case "boolean":
+                return Boolean.valueOf(defaultValue);
             default:
                 warning("Unkown combination of type-format: " + type + "-" + format);
                 return null;
