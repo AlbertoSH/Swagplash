@@ -24,10 +24,18 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
                 JsonNode param = null;
                 if (contentType.get().equals("application/vnd.api+json")) {
                     try {
-                        if (configuration.name().equals("id"))
+                        if (configuration.name().equals("id")) {
                             param = node.get("data").get("id");
-                        else
+                        } else {
                             param = node.get("data").get("attributes").get(configuration.name());
+                            if (param == null) {
+                                JsonNode relation = node.get("data").get("relationships").get(configuration.name());
+                                if (relation != null) {
+                                    param = relation.get("data").get("id");
+                                }
+                            }
+                        }
+
                     } catch (NullPointerException e) {}
                 } else {
                     param = node.get(configuration.name());
