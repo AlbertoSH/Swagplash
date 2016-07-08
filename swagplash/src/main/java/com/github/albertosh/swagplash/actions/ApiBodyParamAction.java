@@ -22,42 +22,95 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
                 String asJsonString = ctx.request().body().asBytes().decodeString("UTF-8");
                 JsonNode node = Json.parse(asJsonString);
                 JsonNode param = null;
-                if (contentType.get().equals("application/vnd.api+json")) {
-                    try {
+
+                if (configuration.required()) {
+                    if (contentType.get().equals("application/vnd.api+json")) {
                         if (configuration.name().equals("id")) {
-                            param = node.get("data").get("id");
-                        } else {
-                            param = node.get("data").get("attributes").get(configuration.name());
-                            if (param == null) {
-                                JsonNode relation = node.get("data").get("relationships").get(configuration.name());
-                                if (relation != null) {
-                                    param = relation.get("data").get("id");
+                            if (node.get("data").has("id")) {
+                                param = node.get("data").get("id");
+                                try {
+                                    ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name()));
+                                } catch (IllegalArgumentException e) {
+                                    return CompletableFuture.completedFuture(badRequest(e.getMessage()));
                                 }
+                            } else {
+                                return CompletableFuture.completedFuture(badRequest("Field \"" + configuration.name() + "\" not found!"));
+                            }
+                        } else {
+                            if (node.get("data").get("attributes").has(configuration.name())) {
+                                param = node.get("data").get("attributes").get(configuration.name());
+                                try {
+                                    ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name()));
+                                } catch (IllegalArgumentException e) {
+                                    return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                                }
+                            } else if (node.get("data").get("relationships").has(configuration.name())) {
+                                param = node.get("data").get("relationships").get(configuration.name()).get("data").get("id");
+                                try {
+                                    ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name()));
+                                } catch (IllegalArgumentException e) {
+                                    return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                                }
+                            } else {
+                                return CompletableFuture.completedFuture(badRequest("Field \"" + configuration.name() + "\" not found!"));
                             }
                         }
-
-                    } catch (NullPointerException e) {}
-                } else {
-                    param = node.get(configuration.name());
-                }
-                if (configuration.required()) {
-                    if (param == null) {
-                        return CompletableFuture.completedFuture(badRequest("Field \"" + configuration.name() + "\" not found!"));
                     } else {
-                        try {
-                            ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name()));
-                        } catch (IllegalArgumentException e) {
-                            return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                        if (node.has(configuration.name())) {
+                            param = node.get(configuration.name());
+                            try {
+                                ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name()));
+                            } catch (IllegalArgumentException e) {
+                                return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                            }
+                        } else {
+                            return CompletableFuture.completedFuture(badRequest("Field \"" + configuration.name() + "\" not found!"));
                         }
                     }
                 } else {
-                    if (param == null) {
-                        ctx.args.put(configuration.name(), Optional.empty());
+                    if (contentType.get().equals("application/vnd.api+json")) {
+
+                        if (configuration.name().equals("id")) {
+                            if (node.get("data").has("id")) {
+                                param = node.get("data").get("id");
+                                try {
+                                    ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name()));
+                                } catch (IllegalArgumentException e) {
+                                    return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                                }
+                            } else {
+                                ctx.args.put(configuration.name(), Optional.empty());
+                            }
+                        } else {
+                            if (node.get("data").get("attributes").has(configuration.name())) {
+                                param = node.get("data").get("attributes").get(configuration.name());
+                                try {
+                                    ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name()));
+                                } catch (IllegalArgumentException e) {
+                                    return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                                }
+                            } else if (node.get("data").get("relationships").has(configuration.name())) {
+                                param = node.get("data").get("relationships").get(configuration.name());
+                                try {
+                                    ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name()));
+                                } catch (IllegalArgumentException e) {
+                                    return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                                }
+                            } else {
+                                ctx.args.put(configuration.name(), Optional.empty());
+                            }
+                        }
+
                     } else {
-                        try {
-                            ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(param, configuration.name())));
-                        } catch (IllegalArgumentException e) {
-                            return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                        param = node.get(configuration.name());
+                        if (param == null) {
+                            ctx.args.put(configuration.name(), Optional.empty());
+                        } else {
+                            try {
+                                ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(param, configuration.name())));
+                            } catch (IllegalArgumentException e) {
+                                return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                            }
                         }
                     }
                 }
