@@ -90,11 +90,16 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
                                     return CompletableFuture.completedFuture(badRequest(e.getMessage()));
                                 }
                             } else if (node.get("data").get("relationships").has(configuration.name())) {
-                                param = node.get("data").get("relationships").get(configuration.name());
-                                try {
-                                    ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(param, configuration.name())));
-                                } catch (IllegalArgumentException e) {
-                                    return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                                param = node.get("data").get("relationships").get(configuration.name()).get("data");
+                                if (param.has("id")) {
+                                    param = param.get("id");
+                                    try {
+                                        ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(param, configuration.name())));
+                                    } catch (IllegalArgumentException e) {
+                                        return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                                    }
+                                } else {
+                                    ctx.args.put(configuration.name(), Optional.empty());
                                 }
                             } else {
                                 ctx.args.put(configuration.name(), Optional.empty());
