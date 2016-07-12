@@ -189,11 +189,15 @@ public @interface ApiBodyParam {
 
             @Override
             public Object toArgs(JsonNode node, String name) throws IllegalArgumentException {
-                String valueAsText = node.asText();
-                if (isValid(valueAsText))
-                    return valueAsText;
-                else
-                    throw new IllegalArgumentException("Field \"" + name + "\" must be a valid MongoId!");
+                if (node.isNull()) {
+                    return null;
+                } else {
+                    String valueAsText = node.asText();
+                    if (isValid(valueAsText))
+                        return valueAsText;
+                    else
+                        throw new IllegalArgumentException("Field \"" + name + "\" must be a valid MongoId!");
+                }
             }
 
             /**
