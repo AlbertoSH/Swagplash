@@ -29,7 +29,7 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
                             if (node.get("data").has("id")) {
                                 param = node.get("data").get("id");
                                 try {
-                                    ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name()));
+                                    ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name(), configuration.contentDataType()));
                                 } catch (IllegalArgumentException e) {
                                     return CompletableFuture.completedFuture(badRequest(e.getMessage()));
                                 }
@@ -40,14 +40,14 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
                             if (node.get("data").get("attributes").has(configuration.name())) {
                                 param = node.get("data").get("attributes").get(configuration.name());
                                 try {
-                                    ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name()));
+                                    ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name(), configuration.contentDataType()));
                                 } catch (IllegalArgumentException e) {
                                     return CompletableFuture.completedFuture(badRequest(e.getMessage()));
                                 }
                             } else if (node.get("data").get("relationships").has(configuration.name())) {
                                 param = node.get("data").get("relationships").get(configuration.name()).get("data").get("id");
                                 try {
-                                    ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name()));
+                                    ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name(), configuration.contentDataType()));
                                 } catch (IllegalArgumentException e) {
                                     return CompletableFuture.completedFuture(badRequest(e.getMessage()));
                                 }
@@ -59,7 +59,7 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
                         if (node.has(configuration.name())) {
                             param = node.get(configuration.name());
                             try {
-                                ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name()));
+                                ctx.args.put(configuration.name(), configuration.dataType().toArgs(param, configuration.name(), configuration.contentDataType()));
                             } catch (IllegalArgumentException e) {
                                 return CompletableFuture.completedFuture(badRequest(e.getMessage()));
                             }
@@ -74,7 +74,7 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
                             if (node.get("data").has("id")) {
                                 param = node.get("data").get("id");
                                 try {
-                                    ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(param, configuration.name())));
+                                    ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(param, configuration.name(), configuration.contentDataType())));
                                 } catch (IllegalArgumentException e) {
                                     return CompletableFuture.completedFuture(badRequest(e.getMessage()));
                                 }
@@ -85,7 +85,7 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
                             if (node.get("data").get("attributes").has(configuration.name())) {
                                 param = node.get("data").get("attributes").get(configuration.name());
                                 try {
-                                    ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(param, configuration.name())));
+                                    ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(param, configuration.name(), configuration.contentDataType())));
                                 } catch (IllegalArgumentException e) {
                                     return CompletableFuture.completedFuture(badRequest(e.getMessage()));
                                 }
@@ -95,7 +95,7 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
                                 if (param.has("id")) {
                                     param = param.get("id");
                                     try {
-                                        ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(param, configuration.name())));
+                                        ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(param, configuration.name(), configuration.contentDataType())));
                                     } catch (IllegalArgumentException e) {
                                         return CompletableFuture.completedFuture(badRequest(e.getMessage()));
                                     }
@@ -113,7 +113,7 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
                             ctx.args.put(configuration.name(), Optional.empty());
                         } else {
                             try {
-                                ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(param, configuration.name())));
+                                ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(param, configuration.name(), configuration.contentDataType())));
                             } catch (IllegalArgumentException e) {
                                 return CompletableFuture.completedFuture(badRequest(e.getMessage()));
                             }
