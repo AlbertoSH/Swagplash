@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.time.OffsetTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @With(ApiBodyParamAction.class)
@@ -44,6 +46,8 @@ public @interface ApiBodyParam {
      */
     DataType dataType() default DataType.STRING;
 
+    DataType contentDataType() default DataType.STRING;
+
     public enum DataType {
         STRING {
             @Override
@@ -57,7 +61,7 @@ public @interface ApiBodyParam {
             }
 
             @Override
-            public Object toArgs(JsonNode node, String name) {
+            public Object toArgs(JsonNode node, String name, DataType arrayContentType) throws IllegalArgumentException {
                 String value;
                 if (node.isNull())
                     value = null;
@@ -79,7 +83,7 @@ public @interface ApiBodyParam {
             }
 
             @Override
-            public Object toArgs(JsonNode node, String name) throws IllegalArgumentException {
+            public Object toArgs(JsonNode node, String name, DataType arrayContentType) throws IllegalArgumentException {
                 String value;
                 if (node.isNull())
                     value = null;
@@ -101,7 +105,7 @@ public @interface ApiBodyParam {
             }
 
             @Override
-            public Object toArgs(JsonNode node, String name) throws IllegalArgumentException {
+            public Object toArgs(JsonNode node, String name, DataType arrayContentType) throws IllegalArgumentException {
                 String valueAsText = node.asText();
                 try {
                     return Integer.parseInt(valueAsText);
@@ -122,7 +126,7 @@ public @interface ApiBodyParam {
             }
 
             @Override
-            public Object toArgs(JsonNode node, String name) throws IllegalArgumentException {
+            public Object toArgs(JsonNode node, String name, DataType arrayContentType) throws IllegalArgumentException {
                 String valueAsText = node.asText();
                 if (valueAsText.equals("true") || valueAsText.equals("false")) {
                     return node.asBoolean();
@@ -143,7 +147,7 @@ public @interface ApiBodyParam {
             }
 
             @Override
-            public Object toArgs(JsonNode node, String name) throws IllegalArgumentException {
+            public Object toArgs(JsonNode node, String name, DataType arrayContentType) throws IllegalArgumentException {
                 String valueAsText = node.asText();
                 try {
                     LocalDate date = LocalDate.parse(valueAsText, DateTimeFormatter.ISO_DATE);
@@ -166,7 +170,7 @@ public @interface ApiBodyParam {
             }
 
             @Override
-            public Object toArgs(JsonNode node, String name) throws IllegalArgumentException {
+            public Object toArgs(JsonNode node, String name, DataType arrayContentType) throws IllegalArgumentException {
                 String valueAsText = node.asText();
                 try {
                     return OffsetTime.parse(valueAsText, DateTimeFormatter.ISO_OFFSET_TIME);
@@ -188,7 +192,7 @@ public @interface ApiBodyParam {
             }
 
             @Override
-            public Object toArgs(JsonNode node, String name) throws IllegalArgumentException {
+            public Object toArgs(JsonNode node, String name, DataType arrayContentType) throws IllegalArgumentException {
                 if (node.isNull()) {
                     return null;
                 } else {
@@ -231,7 +235,7 @@ public @interface ApiBodyParam {
             }
 
             @Override
-            public Object toArgs(JsonNode node, String name) throws IllegalArgumentException {
+            public Object toArgs(JsonNode node, String name, DataType arrayContentType) throws IllegalArgumentException {
                 String valueAsText = node.asText();
                 try {
                     return Duration.parse(valueAsText);
@@ -254,7 +258,7 @@ public @interface ApiBodyParam {
             }
 
             @Override
-            public Object toArgs(JsonNode node, String name) throws IllegalArgumentException {
+            public Object toArgs(JsonNode node, String name, DataType arrayContentType) throws IllegalArgumentException {
                 String value = node.asText();
                 Pattern pattern = Pattern.compile(HEXA_COLOR_REGEX);
                 if (pattern.matcher(value).matches())
@@ -263,12 +267,36 @@ public @interface ApiBodyParam {
                     throw new IllegalArgumentException("Field \"" + name + "\" must be a valid color value\n"
                             + "e.g. \"#AAA\", \"#FFFFFF\", \"#FF0000FF\"");
             }
+        },
+        ARRAY {
+
+            @Override
+            public String getType() {
+                return "array";
+            }
+
+            @Override
+            public String getFormat() {
+                return null;
+            }
+
+            @Override
+            public List<Object> toArgs(JsonNode node, String name, DataType arrayContentType) throws IllegalArgumentException {
+                int size = node.size();
+                List<Object> arguments = new ArrayList<>();
+                for (int i = 0; i < size; i++) {
+                    Object o = arrayContentType.toArgs(node.get(i), name, arrayContentType);
+                    arguments.add(o);
+                }
+                return arguments;
+            }
         };
 
         public abstract String getType();
 
         public abstract String getFormat();
 
-        public abstract Object toArgs(JsonNode node, String name) throws IllegalArgumentException;
+        public abstract Object toArgs(JsonNode node, String name, DataType arrayContentType) throws IllegalArgumentException;
+
     }
 }
