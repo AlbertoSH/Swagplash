@@ -18,7 +18,8 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
     public CompletionStage<Result> call(Http.Context ctx) {
         Optional<String> contentType = ctx.request().contentType();
         if (contentType.isPresent()) {
-            if (contentType.get().contains("json")) {
+            if ((contentType.get().contains("json"))
+                    && (contentType.get().contains("multipart"))){
                 String asJsonString = ctx.request().body().asBytes().decodeString("UTF-8");
                 JsonNode node = Json.parse(asJsonString);
                 JsonNode param = null;
