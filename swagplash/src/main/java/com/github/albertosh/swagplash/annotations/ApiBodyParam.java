@@ -2,8 +2,17 @@ package com.github.albertosh.swagplash.annotations;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.albertosh.swagplash.actions.ApiBodyParamAction;
+
+import org.apache.commons.codec.binary.Base64;
+
+import play.api.libs.Files;
 import play.mvc.With;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.annotation.*;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -341,6 +350,53 @@ public @interface ApiBodyParam {
             @Override
             public Object toArgs(String valueAsString, String name, DataType arrayContentType) throws IllegalArgumentException {
                 return null;
+            }
+        },
+        FILE {
+            @Override
+            public String getType() {
+                return "file";
+            }
+
+            @Override
+            public String getFormat() {
+                return null;
+            }
+
+            @Override
+            public Object toArgs(JsonNode node, String name, DataType arrayContentType) throws IllegalArgumentException {
+                if (node.isNull())
+                    return null;
+
+                String value = node.asText();
+
+                File temp = null;
+                try {
+                    temp = File.createTempFile(name, ".tmp");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("Failed to create tmp file: " + name);
+                }
+
+                byte[] data = Base64.decodeBase64(value);
+                try (OutputStream stream = new FileOutputStream(temp)) {
+                    stream.write(data);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    // Shouldn't happen...
+                    throw new RuntimeException("Failed to create tmp file: " + name);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("Failed to write tmp file: " + name);
+                }
+                Files.TemporaryFile tmpFile = new Files.TemporaryFile(temp);
+
+                return tmpFile;
+            }
+
+            @Override
+            public Object toArgs(String valueAsString, String name, DataType arrayContentType) throws IllegalArgumentException {
+                throw new IllegalStateException("Multipart does not decode files!");
             }
         };
 

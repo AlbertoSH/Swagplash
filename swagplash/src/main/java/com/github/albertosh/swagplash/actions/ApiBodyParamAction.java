@@ -3,6 +3,7 @@ package com.github.albertosh.swagplash.actions;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.albertosh.swagplash.annotations.ApiBodyParam;
 import play.Logger;
+import play.api.libs.Files;
 import play.libs.Json;
 import play.mvc.Action;
 import play.mvc.Http;
@@ -51,33 +52,45 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
     private CompletionStage<Result> handleRequiredMultipart(Http.Context ctx) {
         Http.MultipartFormData multipart = ctx.request().body().asMultipartFormData();
         if (multipart != null) {
-            String[] value = (String[]) multipart.asFormUrlEncoded().get(configuration.name());
-            if (value != null) {
-                if (configuration.dataType() == ApiBodyParam.DataType.ARRAY) {
-                    List values = new ArrayList();
-                    for (int i = 0; i < value.length; i++) {
-                        try {
-                            values.add(configuration.dataType().toArgs(value[i], configuration.name(), configuration.contentDataType()));
-                        } catch (IllegalArgumentException e) {
-                            return CompletableFuture.completedFuture(badRequest(e.getMessage()));
-                        }
-                        ctx.args.put(configuration.name(), Optional.of(values));
-                    }
+            if (configuration.dataType() == ApiBodyParam.DataType.FILE) {
+                Http.MultipartFormData.FilePart filePart = multipart.getFile(configuration.name());
+                File file = null;
+                if (filePart != null) {
+                    file = (File) filePart.getFile();
                 } else {
-                    if (value.length == 0) {
-                        return CompletableFuture.completedFuture(badRequest("Field \"" + configuration.name() + "\" not found!"));
-                    } else if (value.length == 1) {
-                        try {
-                            ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(value[0], configuration.name(), configuration.contentDataType())));
-                        } catch (IllegalArgumentException e) {
-                            return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                    return CompletableFuture.completedFuture(badRequest("File \"" + configuration.name() + "\" not found!"));
+                }
+                Files.TemporaryFile tmpFile = new Files.TemporaryFile(file);
+                ctx.args.put(configuration.name(), tmpFile);
+            } else {
+                String[] value = (String[]) multipart.asFormUrlEncoded().get(configuration.name());
+                if (value != null) {
+                    if (configuration.dataType() == ApiBodyParam.DataType.ARRAY) {
+                        List values = new ArrayList();
+                        for (int i = 0; i < value.length; i++) {
+                            try {
+                                values.add(configuration.dataType().toArgs(value[i], configuration.name(), configuration.contentDataType()));
+                            } catch (IllegalArgumentException e) {
+                                return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                            }
+                            ctx.args.put(configuration.name(), values);
                         }
                     } else {
-                        return CompletableFuture.completedFuture(badRequest("Several values received for " + configuration.name()));
+                        if (value.length == 0) {
+                            return CompletableFuture.completedFuture(badRequest("Field \"" + configuration.name() + "\" not found!"));
+                        } else if (value.length == 1) {
+                            try {
+                                ctx.args.put(configuration.name(), configuration.dataType().toArgs(value[0], configuration.name(), configuration.contentDataType()));
+                            } catch (IllegalArgumentException e) {
+                                return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                            }
+                        } else {
+                            return CompletableFuture.completedFuture(badRequest("Several values received for " + configuration.name()));
+                        }
                     }
+                } else {
+                    return CompletableFuture.completedFuture(badRequest("Field \"" + configuration.name() + "\" not found!"));
                 }
-            } else {
-                return CompletableFuture.completedFuture(badRequest("Field \"" + configuration.name() + "\" not found!"));
             }
         }
         return delegate.call(ctx);
@@ -86,33 +99,44 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
     private CompletionStage<Result> handleNotRequiredMultipart(Http.Context ctx) {
         Http.MultipartFormData multipart = ctx.request().body().asMultipartFormData();
         if (multipart != null) {
-            String[] value = (String[]) multipart.asFormUrlEncoded().get(configuration.name());
-            if (value != null) {
-                if (configuration.dataType() == ApiBodyParam.DataType.ARRAY) {
-                    List values = new ArrayList();
-                    for (int i = 0; i < value.length; i++) {
-                        try {
-                            values.add(configuration.dataType().toArgs(value[i], configuration.name(), configuration.contentDataType()));
-                        } catch (IllegalArgumentException e) {
-                            return CompletableFuture.completedFuture(badRequest(e.getMessage()));
-                        }
-                        ctx.args.put(configuration.name(), Optional.of(values));
-                    }
+            if (configuration.dataType() == ApiBodyParam.DataType.FILE) {
+                Http.MultipartFormData.FilePart filePart = multipart.getFile(configuration.name());
+                if (filePart != null) {
+                    File file = (File) filePart.getFile();
+                    Files.TemporaryFile tmpFile = new Files.TemporaryFile(file);
+                    ctx.args.put(configuration.name(), tmpFile);
                 } else {
-                    if (value.length == 0) {
-                        ctx.args.put(configuration.name(), Optional.empty());
-                    } else if (value.length == 1) {
-                        try {
-                            ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(value[0], configuration.name(), configuration.contentDataType())));
-                        } catch (IllegalArgumentException e) {
-                            return CompletableFuture.completedFuture(badRequest(e.getMessage()));
-                        }
-                    } else {
-                        return CompletableFuture.completedFuture(badRequest("Several values received for " + configuration.name()));
-                    }
+                    ctx.args.put(configuration.name(), Optional.empty());
                 }
             } else {
-                ctx.args.put(configuration.name(), Optional.empty());
+                String[] value = (String[]) multipart.asFormUrlEncoded().get(configuration.name());
+                if (value != null) {
+                    if (configuration.dataType() == ApiBodyParam.DataType.ARRAY) {
+                        List values = new ArrayList();
+                        for (int i = 0; i < value.length; i++) {
+                            try {
+                                values.add(configuration.dataType().toArgs(value[i], configuration.name(), configuration.contentDataType()));
+                            } catch (IllegalArgumentException e) {
+                                return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                            }
+                            ctx.args.put(configuration.name(), Optional.of(values));
+                        }
+                    } else {
+                        if (value.length == 0) {
+                            ctx.args.put(configuration.name(), Optional.empty());
+                        } else if (value.length == 1) {
+                            try {
+                                ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(value[0], configuration.name(), configuration.contentDataType())));
+                            } catch (IllegalArgumentException e) {
+                                return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                            }
+                        } else {
+                            return CompletableFuture.completedFuture(badRequest("Several values received for " + configuration.name()));
+                        }
+                    }
+                } else {
+                    ctx.args.put(configuration.name(), Optional.empty());
+                }
             }
         }
         return delegate.call(ctx);
