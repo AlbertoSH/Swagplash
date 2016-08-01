@@ -104,7 +104,7 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
                 if (filePart != null) {
                     File file = (File) filePart.getFile();
                     Files.TemporaryFile tmpFile = new Files.TemporaryFile(file);
-                    ctx.args.put(configuration.name(), tmpFile);
+                    ctx.args.put(configuration.name(), Optional.of(tmpFile));
                 } else {
                     ctx.args.put(configuration.name(), Optional.empty());
                 }
