@@ -1,6 +1,7 @@
 package com.github.albertosh.swagplash.actions;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.github.albertosh.swagplash.annotations.ApiBodyParam;
 import play.Logger;
 import play.api.libs.Files;
@@ -181,15 +182,32 @@ public class ApiBodyParamAction extends Action<ApiBodyParam> {
                 } else if ((node.get("data").has("relationships"))
                         && (node.get("data").get("relationships").has(configuration.name()))) {
                     param = node.get("data").get("relationships").get(configuration.name()).get("data");
-                    if (param.has("id")) {
-                        param = param.get("id");
-                        try {
-                            ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(param, configuration.name(), configuration.contentDataType())));
-                        } catch (IllegalArgumentException e) {
-                            return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                    if (configuration.dataType().equals(ApiBodyParam.DataType.ARRAY)) {
+                        ArrayNode asArray = (ArrayNode) param;
+                        int l = asArray.size();
+                        if (l > 0) {
+                            List<String> list = new ArrayList<>();
+                            for (int i = 0; i < l; i++) {
+                                JsonNode pNode = asArray.get(i);
+                                JsonNode idNode = pNode.get("id");
+                                String sId = (String) ApiBodyParam.DataType.MONGO_ID.toArgs(idNode, configuration.name(), null);
+                                list.add(sId);
+                            }
+                            ctx.args.put(configuration.name(), Optional.of(list));
+                        } else {
+                            ctx.args.put(configuration.name(), Optional.empty());
                         }
                     } else {
-                        ctx.args.put(configuration.name(), Optional.empty());
+                        if (param.has("id")) {
+                            param = param.get("id");
+                            try {
+                                ctx.args.put(configuration.name(), Optional.of(configuration.dataType().toArgs(param, configuration.name(), configuration.contentDataType())));
+                            } catch (IllegalArgumentException e) {
+                                return CompletableFuture.completedFuture(badRequest(e.getMessage()));
+                            }
+                        } else {
+                            ctx.args.put(configuration.name(), Optional.empty());
+                        }
                     }
                 } else {
                     ctx.args.put(configuration.name(), Optional.empty());
