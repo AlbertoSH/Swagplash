@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.sun.corba.se.spi.activation.IIOP_CLEAR_TEXT.value;
-
 @With(ApiBodyParamAction.class)
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
