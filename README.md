@@ -1,6 +1,7 @@
 # Swagplash
 
- [ ![Download](https://api.bintray.com/packages/albertosh/maven/com.github.albertosh.swagplash/images/download.svg) ](https://bintray.com/albertosh/maven/com.github.albertosh.swagplash/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/albertosh/maven/swagplash/images/download.svg) ](https://bintray.com/albertosh/maven/swagplash/_latestVersion)
+
  
 Play Framework utilities and Swagger documentation generator at compile time
 
