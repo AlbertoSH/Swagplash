@@ -347,8 +347,30 @@ public @interface ApiBodyParam {
 
             @Override
             public Object toArgs(String valueAsString, String name, DataType arrayContentType) throws IllegalArgumentException {
+                throw new IllegalStateException("This is not supposed to be called");
+            }
+        },
+        JSON {
+            @Override
+            public String getType() {
+                return "json";
+            }
+
+            @Override
+            public String getFormat() {
                 return null;
             }
+
+            @Override
+            public Object toArgs(JsonNode node, String name, DataType arrayContentType) throws IllegalArgumentException {
+                return node;
+            }
+
+            @Override
+            public Object toArgs(String valueAsString, String name, DataType arrayContentType) throws IllegalArgumentException {
+                throw new IllegalStateException("This is not supposed to be called");
+            }
+
         },
         FILE {
             @Override
