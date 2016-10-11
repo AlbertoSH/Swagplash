@@ -60,6 +60,8 @@ public class Utils {
             case "long":
                 return "integer";
             case "string":
+            case "localdate":
+            case "localdatetime":
                 return "string";
             case "boolean":
                 return "boolean";
@@ -94,6 +96,10 @@ public class Utils {
                 return "int32";
             case "long":
                 return "int64";
+            case "localdate":
+                return "date";
+            case "localdatetime":
+                return "date-time";
             default:
                 return null;
         }
