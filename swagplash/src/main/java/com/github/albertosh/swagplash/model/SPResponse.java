@@ -9,12 +9,17 @@ import javax.lang.model.type.TypeMirror;
 
 public class SPResponse {
 
-    private int code;
+    private String code;
     private String description;
     private SPSchema schema;
 
     public SPResponse(ApiResponse apiResponse, ExecutableElement element) {
-        code = apiResponse.code();
+        int intCode = apiResponse.code();
+        if (intCode != -1) {
+            code = String.valueOf(apiResponse.code());
+        } else {
+            code = "default";
+        }
         description = apiResponse.message();
 
         TypeMirror tm = null;
@@ -41,11 +46,11 @@ public class SPResponse {
     }
 
     @JsonIgnore
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
-    public SPResponse setCode(int code) {
+    public SPResponse setCode(String code) {
         this.code = code;
         return this;
     }

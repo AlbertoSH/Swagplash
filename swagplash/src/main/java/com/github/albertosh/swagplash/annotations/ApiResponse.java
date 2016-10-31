@@ -21,8 +21,9 @@ public @interface ApiResponse {
      * The HTTP status code of the response.
      * <p>
      * The value should be one of the formal <a target="_blank" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">HTTP Status Code Definitions</a>.
+     * If not set it will be "default"
      */
-    int code();
+    int code() default -1;
 
     /**
      * Human-readable message to accompany the response.
