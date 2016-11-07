@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.lang.annotation.*;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -216,6 +217,33 @@ public @interface ApiBodyParam {
                 } catch (DateTimeParseException e) {
                     throw new IllegalArgumentException("Field \"" + name + "\" must be a valid time value with valid format: \n"
                             + "e.g. \"" + OffsetTime.now().format(DateTimeFormatter.ISO_TIME) + "\"");
+                }
+            }
+        },
+        OFFSET_DATE_TIME {
+            @Override
+            public String getType() {
+                return "string";
+            }
+
+            @Override
+            public String getFormat() {
+                return "date-time";
+            }
+
+            @Override
+            public Object toArgs(JsonNode node, String name, DataType arrayContentType) throws IllegalArgumentException {
+                String valueAsString = node.asText();
+                return toArgs(valueAsString, name, arrayContentType);
+            }
+
+            @Override
+            public Object toArgs(String valueAsString, String name, DataType arrayContentType) throws IllegalArgumentException {
+                try {
+                    return OffsetDateTime.parse(valueAsString, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                } catch (DateTimeParseException e) {
+                    throw new IllegalArgumentException("Field \"" + name + "\" must be a valid datetime value with valid format: \n"
+                            + "e.g. \"" + OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME) + "\"");
                 }
             }
         },
